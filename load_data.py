@@ -27,7 +27,8 @@ cur.execute("""
 		correo varchar(30),
 		password varchar(32),
 		dni varchar(9),
-		rol BIT
+		rol BIT,
+		deshabilitado BIT
 	)
 """)
 
@@ -122,7 +123,7 @@ for user in usuarios:
 	dataBase_password = user['password'] + salt
 	hashed = hashlib.md5(dataBase_password.encode())
 	dataBase_password = hashed.hexdigest()
-	cur.execute(f"""INSERT INTO User VALUES ('{user['nomusuario']}', '{user['nombres']}', '{user['email']}', '{dataBase_password}', '{user['dni']}', {user['rol']})""")
+	cur.execute(f"""INSERT INTO User VALUES ('{user['nomusuario']}', '{user['nombres']}', '{user['email']}', '{dataBase_password}', '{user['dni']}', {user['rol']}, {user['deshabilitado']})""")
 	con.commit()
 
 

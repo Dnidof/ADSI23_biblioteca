@@ -16,6 +16,7 @@ def get_logged_user():
 			request.user = library.get_user_cookies(token, float(time))
 			if request.user:
 				request.user.token = token
+				request.admin = request.user.isAdmin()
 
 
 @app.after_request
@@ -74,31 +75,46 @@ def logout():
 		request.user = None
 	return resp
 
-@app.route('/gestionusuarios')
-def gestionUsuarios():
-	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
-		return render_template("gestionusuarios.html")
-	else:
-		return render_template("index.html")
-
-
 @app.route('/addusuario')
-def gestionUsuarios():
-	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
-		return render_template("addusuario.html")
+def addUsuario():
+	if 'user' in dir(request) and request.user and request.user.token and request.admin:
+		resp = render_template("addusuario.html")
 	else:
-		return render_template("index.html")
+		path = request.values.get("path", "/")
+		resp = redirect(path)
+	return resp
 
 @app.route('/eliminarusuario')
-def gestionUsuarios():
-	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
-		return render_template("eliminarusuario.html")
+def eliminarUsuario():
+	if 'user' in dir(request) and request.user and request.user.token and request.admin:
+		resp = render_template("eliminarusuario.html")
 	else:
-		return render_template("index.html")
+		path = request.values.get("path", "/")
+		resp = redirect(path)
+	return resp
 
-@app.route('/addlibro')
-def gestionUsuarios():
-	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
-		return render_template("addlibro.html")
+@app.route('/addlibro', methods=['GET', 'POST'])
+def addLibro():
+	if 'user' in dir(request) and request.user and request.user.token and request.admin:
+		if request.method == "POST":
+			titulo = request.values.get("titulo")
+			autor = request.values.get("autor")
+			foto = request.values.get("foto")
+			desc = request.values.get("desc")
+			if titulo and autor and foto and desc:
+				if not library.bookExists(titulo, autor):
+					library.addBook(titulo, autor, foto, desc)
+		resp = render_template("addlibro.html")
 	else:
-		return render_template("index.html")
+		path = request.values.get("path", "/")
+		resp = redirect(path)
+	return resp
+
+@app.route('/gestionarusuarios')
+def gestionarUsuarios():
+	if 'user' in dir(request) and request.user and request.user.token and request.admin:
+		resp = render_template("gestionarusuarios.html")
+	else:
+		path = request.values.get("path", "/")
+		resp = redirect(path)
+	return resp

@@ -36,13 +36,20 @@ class LibraryController:
 	def get_user(self, email, password):
 		user = db.select("SELECT * from User WHERE correo = ? AND password = ?", (email, hash_password(password)))
 		if len(user) > 0:
-			return User(user[0][0], user[0][1], user[0][2], user[0][3], user[0][4], user[0][5])
+			return User(user[0][0], user[0][1], user[0][2], user[0][4], user[0][5], user[0][6])
 		else:
 			return None
 
 	def get_user_cookies(self, token, time):
 		user = db.select("SELECT u.* from User u, Session s WHERE u.nomusuario = s.nomusuario AND s.last_login = ? AND s.session_hash = ?", (time, token))
 		if len(user) > 0:
-			return User(user[0][0], user[0][1], user[0][2], user[0][3], user[0][4], user[0][5])
+			return User(user[0][0], user[0][1], user[0][2], user[0][4], user[0][5], user[0][6])
 		else:
 			return None
+
+	def bookExists(self, titulo, autor):
+		libro = db.select("SELECT * FROM Book WHERE titulo = ? AND autor = ?", (titulo, autor))
+		return len(libro) > 0
+
+	def addBook(self, titulo, autor, foto, desc):
+		db.insert("INSERT INTO Book VALUES(NULL, ?, ?, ?, ?)", (titulo, autor, foto, desc))

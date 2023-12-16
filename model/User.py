@@ -18,8 +18,8 @@ class User:
 		self.name = name
 		self.email = email
 		self.dni = dni
-		self.rol = rol
-		self.deshabilitado = deshabilitado
+		self.rol = int(rol)
+		self.deshabilitado = int(deshabilitado)
 
 	def __str__(self):
 		return f"{self.username} ({self.email})"
@@ -47,5 +47,5 @@ class User:
 		self.deshabilitado = True
 		db.update("UPDATE User Set deshabilitado = 1 WHERE nomusuario = ?", (self.username))
 
-	def isAdmin(self, username):
-		return self.username == username and self.rol == 1
+	def isAdmin(self):
+		return self.rol == 1
