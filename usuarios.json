@@ -6,7 +6,8 @@
       "email": "james@gmail.com",
       "password": "123456",
       "dni": "12345678Z",
-      "rol": "1"
+      "rol": "1",
+      "deshabilitado": "0"
     },
     {
       "nombres": "Jhon Doe",
@@ -14,7 +15,8 @@
       "password": "123",
       "nomusuario": "IPB7fSC",
       "dni": "12345678Z",
-      "rol": "0"
+      "rol": "0",
+      "deshabilitado": "0"
     },
     {
       "nombres": "Juan Ejemplo",
@@ -22,7 +24,8 @@
       "password": "123456",
       "nomusuario": "NgbZCib",
       "dni": "12345678Z",
-      "rol": "0"
+      "rol": "0",
+      "deshabilitado": "0"
     },
     {
       "nombres": "Juan Ejemplo",
@@ -30,7 +33,8 @@
       "password": "123456",
       "nomusuario": "S_Faisg",
       "dni": "12345678Z",
-      "rol": "0"
+      "rol": "0",
+      "deshabilitado": "0"
     }
   ]
 }

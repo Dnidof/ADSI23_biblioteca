@@ -98,7 +98,7 @@ cur.execute("""
 		usuario varchar(15),
 		fechaInicio DATE,
 		fechaDev DATE,
-		primary key (usuario, codLibro, fechaInicio),
+		primary key (usuario, codCopia, fechaInicio),
 		FOREIGN KEY (usuario) REFERENCES  User(nomusuario),
 		FOREIGN KEY (codCopia) REFERENCES  CopiaLibro(codCopia)
 	)
@@ -107,9 +107,9 @@ cur.execute("""
 cur.execute("""
 	CREATE TABLE Session(
 		session_hash varchar(32) primary key,
-		username varchar(15),
+		nomusuario varchar(15),
 		last_login float,
-		FOREIGN KEY(username) REFERENCES User(username)
+		FOREIGN KEY(nomusuario) REFERENCES User(nomusuario)
 	)
 """)
 
@@ -127,7 +127,7 @@ for user in usuarios:
 
 
 #### Insert books
-with open('libros.tsv', 'r') as f:
+with open('libros.tsv', 'r', encoding="utf8") as f:
 	libros = [x.split("\t") for x in f.readlines()]
 
 for author, title, cover, description in libros:
