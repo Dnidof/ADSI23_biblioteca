@@ -75,19 +75,58 @@ def logout():
 		request.user = None
 	return resp
 
-@app.route('/addusuario')
+@app.route('/addusuario', methods=['GET', 'POST'])
 def addUsuario():
 	if 'user' in dir(request) and request.user and request.user.token and request.admin:
-		resp = render_template("addusuario.html")
+		errores = []
+		if request.method == "POST":
+			usuario = request.values.get("usuario")
+			nombre = request.values.get("nombre")
+			correo = request.values.get("correo")
+			password = request.values.get("password")
+			dni = request.values.get("dni")
+			rol = 1 if request.values.get("rol") == "1" else 0
+			deshabilitado = 0
+
+			if usuario and nombre and correo and password and dni and rol:
+				usuarioDisponible = not library.checkUsernameExists(usuario)
+				correoDisponible = not library.checkEmailExists(correo)
+
+				if usuarioDisponible and correoDisponible:
+					library.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
+				elif not usuarioDisponible:
+					errores.append("Nombre de usuario no disponible")
+				elif not correoDisponible:
+					errores.append("Correo no disponible")
+
+		resp = render_template("addusuario.html", errores=errores)
 	else:
 		path = request.values.get("path", "/")
 		resp = redirect(path)
 	return resp
 
-@app.route('/eliminarusuario')
+@app.route('/eliminarusuario', methods=['GET', 'POST'])
 def eliminarUsuario():
 	if 'user' in dir(request) and request.user and request.user.token and request.admin:
-		resp = render_template("eliminarusuario.html")
+		if request.method == "POST":
+			username = request.values.get("nomusuario")
+			email = request.values.get("correo")
+			if username and email:
+				library.deleteUser(username, email)
+
+		page = int(request.values.get("page", 1))
+		users, nb_users = library.getUsers(page=page - 1)
+		nb_users -= 1 # remove current user
+		total_pages = (nb_users // 6) + 1
+
+		# remove current user from search
+		results = []
+		for usr in users:
+			if usr.username != request.user.username:
+				results.append(usr)
+
+		resp = render_template("eliminarusuario.html", users=results, current_page=page,
+							   total_pages=total_pages, max=max, min=min)
 	else:
 		path = request.values.get("path", "/")
 		resp = redirect(path)
@@ -104,6 +143,7 @@ def addLibro():
 			if titulo and autor and foto and desc:
 				if not library.bookExists(titulo, autor):
 					library.addBook(titulo, autor, foto, desc)
+
 		resp = render_template("addlibro.html")
 	else:
 		path = request.values.get("path", "/")

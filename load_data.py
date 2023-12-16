@@ -24,7 +24,7 @@ cur.execute("""
 	CREATE TABLE User(
 		nomusuario varchar(15) primary key,
 		nombre varchar(20),
-		correo varchar(30),
+		correo varchar(30) UNIQUE,
 		password varchar(32),
 		dni varchar(9),
 		rol BIT,
