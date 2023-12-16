@@ -73,3 +73,32 @@ def logout():
 		request.user.delete_session(request.user.token)
 		request.user = None
 	return resp
+
+@app.route('/gestionusuarios')
+def gestionUsuarios():
+	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
+		return render_template("gestionusuarios.html")
+	else:
+		return render_template("index.html")
+
+
+@app.route('/addusuario')
+def gestionUsuarios():
+	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
+		return render_template("addusuario.html")
+	else:
+		return render_template("index.html")
+
+@app.route('/eliminarusuario')
+def gestionUsuarios():
+	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
+		return render_template("eliminarusuario.html")
+	else:
+		return render_template("index.html")
+
+@app.route('/addlibro')
+def gestionUsuarios():
+	if 'user' in dir(request) and request.user and request.user.token and request.user.isAdmin():
+		return render_template("addlibro.html")
+	else:
+		return render_template("index.html")
