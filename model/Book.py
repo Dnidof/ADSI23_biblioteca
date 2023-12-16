@@ -1,5 +1,4 @@
 from .Connection import Connection
-from .Author import Author
 
 db = Connection()
 
@@ -13,9 +12,6 @@ class Book:
 
 	@property
 	def author(self):
-		if type(self._author) == int:
-			em = db.select("SELECT * from Author WHERE id=?", (self._author,))[0]
-			self._author = Author(em[0], em[1])
 		return self._author
 
 	@author.setter
