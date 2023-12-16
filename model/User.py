@@ -42,3 +42,10 @@ class User:
 
 	def delete_session(self, session_hash):
 		db.delete("DELETE FROM Session WHERE session_hash = ? AND nomusuario = ?", (session_hash, self.username))
+
+	def deshabilitar(self):
+		self.deshabilitado = True
+		db.update("UPDATE User Set deshabilitado = 1 WHERE nomusuario = ?", (self.username))
+
+	def isAdmin(self, username):
+		return self.username == username and self.rol == 1
