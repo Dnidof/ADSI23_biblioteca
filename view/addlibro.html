@@ -3,32 +3,36 @@
 {% block content %}
 <div class="container p-5 my-5 border">
 
-<form class="form-inline" method="POST">
-  <div class="input-group mb-2 mr-sm-2">
-      <label class="col-sm-2 col-form-label" for="titulo">Título</label>
-      <input type="text" id="titulo" name="titulo" class="form-control mb-2" />
-  </div>
+    <form class="form-inline" method="POST">
+      <div class="input-group mb-2 mr-sm-2">
+          <label class="col-sm-2 col-form-label" for="titulo">Título</label>
+          <input type="text" id="titulo" name="titulo" class="form-control mb-2" />
+      </div>
 
-  <div class="input-group mb-2 mr-sm-2">
-      <label class="col-sm-2 col-form-label" for="autor">Autor</label>
-      <input type="text" id="autor" name="autor" class="form-control mb-2" />
-  </div>
+      <div class="input-group mb-2 mr-sm-2">
+          <label class="col-sm-2 col-form-label" for="autor">Autor</label>
+          <input type="text" id="autor" name="autor" class="form-control mb-2" />
+      </div>
 
-  <div class="input-group mb-2 mr-sm-2">
-      <label class="col-sm-2 col-form-label" for="foto">Foto</label>
-      <input type="text" id="foto" name="foto" class="form-control mb-2" />
-  </div>
+      <div class="input-group mb-2 mr-sm-2">
+          <label class="col-sm-2 col-form-label" for="foto">Foto</label>
+          <input type="text" id="foto" name="foto" class="form-control mb-2" />
+      </div>
 
-  <div class="input-group mb-2 mr-sm-2">
-      <label class="col-sm-2 col-form-label" for="desc">Descripción</label>
-      <input type="text" id="desc" name="desc" class="form-control mb-2" />
-  </div>
+      <div class="input-group mb-2 mr-sm-2">
+          <label class="col-sm-2 col-form-label" for="desc">Descripción</label>
+          <input type="text" id="desc" name="desc" class="form-control mb-2" />
+      </div>
 
-  <!-- Submit button -->
-  <button type="submit" class="btn btn-primary btn-block mb-4">Añadir libro</button>
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Añadir libro</button>
 
 
-</form>
-
+    </form>
+    {% for error in errores %}
+            <div class="col-lg-4 col-md-6 col-sm-12 my-2 error">
+                {{error}}
+            </div>
+    {% endfor %}
 </div>
 {% endblock %}

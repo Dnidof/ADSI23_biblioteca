@@ -95,10 +95,11 @@ def addUsuario():
 
 				if usuarioDisponible and correoDisponible:
 					gestorUsuarios.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
-				elif not usuarioDisponible:
-					errores.append("Nombre de usuario no disponible")
-				elif not correoDisponible:
-					errores.append("Correo no disponible")
+				else:
+					if not usuarioDisponible:
+						errores.append("Nombre de usuario no disponible")
+					if not correoDisponible:
+						errores.append("Correo no disponible")
 
 		resp = render_template("addusuario.html", errores=errores)
 	else:
@@ -136,6 +137,7 @@ def eliminarUsuario():
 @app.route('/addlibro', methods=['GET', 'POST'])
 def addLibro():
 	if 'user' in dir(request) and request.user and request.user.token and request.admin:
+		errores = []
 		if request.method == "POST":
 			titulo = request.values.get("titulo")
 			autor = request.values.get("autor")
@@ -145,8 +147,10 @@ def addLibro():
 				books, count = library.search_books(titulo, autor)
 				if count == 0:
 					library.addBook(titulo, autor, foto, desc)
+				else:
+					errores.append("Ya existe un libro con el mismo título y el mismo autor")
 
-		resp = render_template("addlibro.html")
+		resp = render_template("addlibro.html", errores=errores)
 	else:
 		path = request.values.get("path", "/")
 		resp = redirect(path)
