@@ -22,7 +22,7 @@
           <li class="nav-item"><a href="/catalogue" class="nav-link {% if request.path == '/catalogue' %}active{% endif %}">Catalogue</a></li>
           {% if 'user' in request.__dict__ and request.user and request.user.token: %}
           <li class="nav-item"><span class="nav-link disabled">{{request.user.name}}</span></li>
-            {% if 'admin' in request.__dict__ %}
+            {% if 'admin' in request.__dict__ and request.admin %}
             <li class="nav-item"><a href="/gestionarusuarios" class="nav-link {% if request.path == '/gestionarusuarios' %}active{% endif %}">Gestionar usuarios</a></li>
             <li class="nav-item"><a href="/addlibro" class="nav-link {% if request.path == '/addlibro' %}active{% endif %}">Añadir libro</a></li>
             {% endif %}
