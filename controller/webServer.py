@@ -100,6 +100,8 @@ def addUsuario():
 						errores.append("Nombre de usuario no disponible")
 					if not correoDisponible:
 						errores.append("Correo no disponible")
+			else:
+				errores.append("Todos los campos son obligatorios")
 
 		resp = render_template("addusuario.html", errores=errores)
 	else:
