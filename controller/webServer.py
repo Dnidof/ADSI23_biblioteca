@@ -1,11 +1,12 @@
 from .LibraryController import LibraryController
+from .GestorUsuarios import GestorUsuarios
 from flask import Flask, render_template, request, make_response, redirect
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
 
 library = LibraryController()
-
+gestorUsuarios = GestorUsuarios()
 
 @app.before_request
 def get_logged_user():
@@ -13,7 +14,7 @@ def get_logged_user():
 		token = request.cookies.get('token')
 		time = request.cookies.get('time')
 		if token and time:
-			request.user = library.get_user_cookies(token, float(time))
+			request.user = gestorUsuarios.get_user_cookies(token, float(time))
 			if request.user:
 				request.user.token = token
 				request.admin = request.user.isAdmin()
@@ -50,7 +51,7 @@ def login():
 		return redirect('/')
 	email = request.values.get("email", "")
 	password = request.values.get("password", "")
-	user = library.get_user(email, password)
+	user = gestorUsuarios.get_user(email, password)
 	if user:
 		session = user.new_session()
 		resp = redirect("/")
@@ -89,11 +90,11 @@ def addUsuario():
 			deshabilitado = 0
 
 			if usuario and nombre and correo and password and dni and rol:
-				usuarioDisponible = not library.checkUsernameExists(usuario)
-				correoDisponible = not library.checkEmailExists(correo)
+				usuarioDisponible = not gestorUsuarios.checkUsernameExists(usuario)
+				correoDisponible = not gestorUsuarios.checkEmailExists(correo)
 
 				if usuarioDisponible and correoDisponible:
-					library.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
+					gestorUsuarios.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
 				elif not usuarioDisponible:
 					errores.append("Nombre de usuario no disponible")
 				elif not correoDisponible:
@@ -112,10 +113,10 @@ def eliminarUsuario():
 			username = request.values.get("nomusuario")
 			email = request.values.get("correo")
 			if username and email:
-				library.deleteUser(username, email)
+				gestorUsuarios.deleteUser(username, email)
 
 		page = int(request.values.get("page", 1))
-		users, nb_users = library.getUsers(page=page - 1)
+		users, nb_users = gestorUsuarios.getUsers(page=page - 1)
 		nb_users -= 1 # remove current user
 		total_pages = (nb_users // 6) + 1
 
@@ -141,7 +142,8 @@ def addLibro():
 			foto = request.values.get("foto")
 			desc = request.values.get("desc")
 			if titulo and autor and foto and desc:
-				if not library.bookExists(titulo, autor):
+				books, count = library.search_books(titulo, autor)
+				if count == 0:
 					library.addBook(titulo, autor, foto, desc)
 
 		resp = render_template("addlibro.html")
