@@ -141,14 +141,16 @@ def addLibro():
 		if request.method == "POST":
 			titulo = request.values.get("titulo")
 			autor = request.values.get("autor")
-			foto = request.values.get("foto")
+			foto = request.values.get("foto", "")
 			desc = request.values.get("desc")
-			if titulo and autor and foto and desc:
+			if titulo and autor and desc:
 				books, count = library.search_books(titulo, autor)
 				if count == 0:
 					library.addBook(titulo, autor, foto, desc)
 				else:
 					errores.append("Ya existe un libro con el mismo título y el mismo autor")
+			else:
+				errores.append("Rellena los campos de Título, Autor y Descripción, son obligatorios.")
 
 		resp = render_template("addlibro.html", errores=errores)
 	else:
