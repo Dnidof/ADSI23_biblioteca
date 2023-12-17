@@ -2,7 +2,7 @@ from . import BaseTestClass
 from bs4 import BeautifulSoup
 class TestAddUsuario(BaseTestClass):
 
-	def test_add_libro_admin(self):
+	def test_add_usuario_admin(self):
 		self.login('james@gmail.com', '123456')
 		res2 = self.client.get('/addusuario')
 		page = BeautifulSoup(res2.data, features="html.parser")
@@ -94,7 +94,7 @@ class TestAddUsuario(BaseTestClass):
 
 		self.db.delete(f"DELETE FROM User WHERE nomusuario = '{nomusrPrueba}'")
 
-	def test_add_libro_not_admin(self):
+	def test_add_usuario_not_admin(self):
 		self.login('jhon@gmail.com', '123')
 		res2 = self.client.get('/addusuario')
 		self.assertEqual(302, res2.status_code)
