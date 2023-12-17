@@ -4,77 +4,67 @@ class TestEliminarUsuario(BaseTestClass):
 
     def test_admin_eliminar_usuario(self):
         self.login('james@gmail.com', '123456')
-        res2 = self.client.get('/addlibro')
+        res2 = self.client.get('/eliminarusuario')
         page = BeautifulSoup(res2.data, features="html.parser")
 
-        self.assertEqual('Título', page.find_all('label')[0].get_text())
-        self.assertEqual('Autor', page.find_all('label')[1].get_text())
-        self.assertEqual('Foto', page.find_all('label')[2].get_text())
-        self.assertEqual('Descripción', page.find_all('label')[3].get_text())
-        self.assertEqual('Añadir libro', page.find_all('button')[0].get_text())
+        # Comprobamos que aparecen los usuarios
+        consulta = self.db.select("SELECT nomusuario FROM User")
+        usernames = [
+            u[0]
+            for u in consulta
+        ]
+        for card in page.find('div', class_='row').find_all('div', class_='card'):
+            self.assertTrue(card.find(class_='card-title').get_text() in usernames)
 
-        self.db.delete("DELETE FROM Book WHERE titulo = 'hola' AND autor = 'hola'")
+        # Añadimos un usuario y posteriormente lo eliminamos
+        valorprueba = "__test"
+        params = (valorprueba, valorprueba, valorprueba, valorprueba, valorprueba, 0, 0)
+        self.db.insert("INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?)", params)
 
         count = self.db.select("""
-    					SELECT count() 
-    					FROM Book b
-    						WHERE b.titulo LIKE ? 
-    						AND b.autor LIKE ? 
-    			""", (f"%{'hola'}%", f"%{'hola'}%"))[0][0]
-        self.assertEqual(0, count)
-
-        res2 = self.client.post('/addlibro', data={'titulo': 'hola', 'autor': 'hola', 'foto': '', 'desc': 'prueba'},
-                                headers={'content-type': 'application/x-www-form-urlencoded'})
-        count = self.db.select("""
-    							SELECT count() 
-    							FROM Book b
-    								WHERE b.titulo LIKE ? 
-    								AND b.autor LIKE ? 
-    					""", (f"%{'hola'}%", f"%{'hola'}%"))[0][0]
+                SELECT count() 
+                FROM User u
+                WHERE u.nomusuario LIKE ? AND deshabilitado = 0
+        """, (f"%{valorprueba}%",))[0][0]
         self.assertEqual(1, count)
 
-        res3 = self.client.post('/addlibro', data={'titulo': 'hola', 'autor': 'hola', 'foto': '', 'desc': 'prueba'},
+        res2 = self.client.post('/eliminarusuario', data={'nomusuario': valorprueba},
                                 headers={'content-type': 'application/x-www-form-urlencoded'})
-        page = BeautifulSoup(res3.data, features="html.parser")
-        mydivs = page.find_all("div", {"class": "error"})
-        self.assertEqual(1, len(mydivs))
-        self.assertEqual('Ya existe un libro con el mismo título y el mismo autor', mydivs[0].get_text())
+        page = BeautifulSoup(res2.data, features="html.parser")
 
-        res3 = self.client.post('/addlibro', data={'autor': 'hola', 'foto': '', 'desc': 'prueba'},
-                                headers={'content-type': 'application/x-www-form-urlencoded'})
-        page = BeautifulSoup(res3.data, features="html.parser")
-        mydivs = page.find_all("div", {"class": "error"})
-        self.assertEqual(1, len(mydivs))
-        self.assertEqual('Rellena los campos de Título, Autor y Descripción, son obligatorios.', mydivs[0].get_text())
+        # Al eliminarlo comprobamos que no aparece en la página pero vemos que esta deshabilitado en la BD
 
-        res3 = self.client.post('/addlibro', data={'titulo': 'hola', 'foto': '', 'desc': 'prueba'},
-                                headers={'content-type': 'application/x-www-form-urlencoded'})
-        page = BeautifulSoup(res3.data, features="html.parser")
-        mydivs = page.find_all("div", {"class": "error"})
-        self.assertEqual(1, len(mydivs))
-        self.assertEqual('Rellena los campos de Título, Autor y Descripción, son obligatorios.', mydivs[0].get_text())
+        for card in page.find('div', class_='row').find_all('div', class_='card'):
+            self.assertTrue(card.find(class_='card-title').get_text() != valorprueba)
 
-        res3 = self.client.post('/addlibro', data={'titulo': 'hola', 'autor': 'hola', 'foto': ''},
-                                headers={'content-type': 'application/x-www-form-urlencoded'})
-        page = BeautifulSoup(res3.data, features="html.parser")
-        mydivs = page.find_all("div", {"class": "error"})
-        self.assertEqual(1, len(mydivs))
-        self.assertEqual('Rellena los campos de Título, Autor y Descripción, son obligatorios.', mydivs[0].get_text())
+        count = self.db.select("""
+                SELECT count() 
+                FROM User u
+                WHERE u.nomusuario LIKE ? AND deshabilitado = 1
+        """, (f"%{valorprueba}%",))[0][0]
+        self.assertEqual(1, count)
 
-        self.db.delete("DELETE FROM Book WHERE titulo = 'hola' AND autor = 'hola'")
+        # Limpiamos la BD del usuario de prueba
+        self.db.delete("DELETE FROM User WHERE nomusuario = ?", (valorprueba, ))
+        count = self.db.select("""
+                        SELECT count() 
+                        FROM User u
+                        WHERE u.nomusuario LIKE ? AND deshabilitado = 1
+                """, (f"%{valorprueba}%",))[0][0]
+        self.assertEqual(0, count)
 
     def test_not_admin_eliminar_usuario(self):
         self.login('jhon@gmail.com', '123')
-        res2 = self.client.get('/addlibro')
+        res2 = self.client.get('/eliminarusuario')
         self.assertEqual(302, res2.status_code)
         self.assertEqual('/', res2.location)
 
-        self.client.post('/addlibro', data={'titulo': 'hola', 'autor': 'hola', 'foto': '', 'desc': 'prueba'},
-                         headers={'content-type': 'application/x-www-form-urlencoded'})
+        valorprueba = "__test"
+        self.client.post('/eliminarusuario', data={'nomusuario': valorprueba},
+                                headers={'content-type': 'application/x-www-form-urlencoded'})
         count = self.db.select("""
-    									SELECT count() 
-    									FROM Book b
-    										WHERE b.titulo LIKE ? 
-    										AND b.autor LIKE ? 
-    							""", (f"%{'hola'}%", f"%{'hola'}%"))[0][0]
+                                SELECT count() 
+                                FROM User u
+                                WHERE u.nomusuario LIKE ? AND deshabilitado = 1
+                        """, (f"%{valorprueba}%",))[0][0]
         self.assertEqual(0, count)
