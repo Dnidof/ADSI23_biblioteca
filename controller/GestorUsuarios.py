@@ -55,5 +55,5 @@ class GestorUsuarios:
         ]
         return users, count
 
-    def deleteUser(self, username, email):
-        db.update("UPDATE User SET deshabilitado = 1 WHERE nomusuario = ? AND correo = ?", (username, email))
+    def deleteUser(self, username):
+        db.update("UPDATE User SET deshabilitado = 1 WHERE nomusuario = ?", (username, ))

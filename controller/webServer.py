@@ -114,9 +114,8 @@ def eliminarUsuario():
 	if 'user' in dir(request) and request.user and request.user.token and request.admin:
 		if request.method == "POST":
 			username = request.values.get("nomusuario")
-			email = request.values.get("correo")
-			if username and email:
-				gestorUsuarios.deleteUser(username, email)
+			if username:
+				gestorUsuarios.deleteUser(username)
 
 		page = int(request.values.get("page", 1))
 		users, nb_users = gestorUsuarios.getUsers(page=page - 1)
