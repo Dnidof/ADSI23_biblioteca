@@ -154,6 +154,11 @@ class TestAddUsuario(BaseTestClass):
 		passwords = ["test", "1"*33]
 		dnis = ["12345678Z", "1", "1"*10]
 		rol = "0"
+		mensajes = ["El nombre de usuario debe tener entre 1-15 caracteres",
+					"El nombre debe tener entre 1-20 caracteres",
+					"El correo debe tener como máximo 30 caracteres",
+					"La contraseña debe tener como máximo 32 caracteres",
+					"El DNI debe tener 9 caracteres"]
 
 		for ind_user, user in enumerate(users):
 			for ind_nombre, nombre in enumerate(nombres):
@@ -176,6 +181,8 @@ class TestAddUsuario(BaseTestClass):
 
 							errormsg = f"user:{user},nombre:{nombre},correo:{correo},password:{passwd},dni:{dni}\nErrores:{[e.get_text() for e in mydivs]}"
 							self.assertEqual(ind_sum, len(mydivs), errormsg)
+							for e in mydivs:
+								self.assertTrue(e.get_text() in mensajes)
 
 							count = self.db.select("""
 																	SELECT count() 

@@ -89,6 +89,10 @@ class TestAddLibro(BaseTestClass):
 		autores = ["test", "1"*41]
 		fotos = ["test", "1"*51]
 		descs = ["test", "1"*65536]
+		mensajes = ["El título debe tener entre 1-50 caracteres",
+					"El autor debe tener entre 1-40 caracteres",
+					"El link de la foto debe tener como máximo 50 caracteres",
+					"La descripción debe tener como máximo 65535 caracteres"]
 
 		for ind_t, titulo in enumerate(titulos):
 			for ind_nom, autor in enumerate(autores):
@@ -110,6 +114,8 @@ class TestAddLibro(BaseTestClass):
 
 							errormsg = f"titulo:{titulo},autor:{autor},foto:{foto},desc:{desc}\nErrores:{[e.get_text() for e in mydivs]}"
 							self.assertEqual(ind_sum, len(mydivs), errormsg)
+							for e in mydivs:
+								self.assertTrue(e.get_text() in mensajes)
 
 							count = self.db.select("""
 																				SELECT count() 
