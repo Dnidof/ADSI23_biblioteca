@@ -16,7 +16,7 @@ class TestAddUsuario(BaseTestClass):
 		self.assertEqual('Añadir usuario', page.find_all('button')[0].get_text())
 
 		nomusrPrueba = '_test'
-		self.db.delete(f"DELETE FROM User WHERE nomusuario = '{nomusrPrueba}'")
+		self.db.delete("DELETE FROM User WHERE nomusuario = ?", (nomusrPrueba, ))
 
 		count = self.db.select("""
 						SELECT count() 
@@ -92,7 +92,7 @@ class TestAddUsuario(BaseTestClass):
 		self.assertEqual(1, len(mydivs))
 		self.assertEqual('Todos los campos son obligatorios', mydivs[0].get_text())
 
-		self.db.delete(f"DELETE FROM User WHERE nomusuario = '{nomusrPrueba}'")
+		self.db.delete("DELETE FROM User WHERE nomusuario = ?", (nomusrPrueba, ))
 
 	def test_not_admin_add_usuario(self):
 		self.login('jhon@gmail.com', '123')
