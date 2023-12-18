@@ -44,6 +44,12 @@ class TestEliminarUsuario(BaseTestClass):
         """, (f"%{valorprueba}%",))[0][0]
         self.assertEqual(1, count)
 
+        # Comprobamos que el usuario deshabilitado no puede iniciar sesión
+        self.client.delete_cookie('token')
+        self.login(valorprueba, valorprueba)
+        desh = self.client.get("/")
+        self.assertNotIn('token', ''.join(desh.headers.values()))
+
         # Limpiamos la BD del usuario de prueba
         self.db.delete("DELETE FROM User WHERE nomusuario = ?", (valorprueba, ))
         count = self.db.select("""
