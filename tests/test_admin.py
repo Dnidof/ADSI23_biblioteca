@@ -14,6 +14,12 @@ class TestAdmin(BaseTestClass):
         self.assertEqual('Gestionar usuarios', page.find('header').find('ul').find_all('li')[3].get_text())
         self.assertEqual('Añadir libro', page.find('header').find('ul').find_all('li')[4].get_text())
 
+        res2 = self.client.get('/')
+        page = BeautifulSoup(res2.data, features="html.parser")
+        for link in page.find("div", {"class": "p-5"}).find_all("a"):
+            print(link.get_text())
+            self.assertTrue(link.get_text() in ["Añadir usuario", "Eliminar usuario"])
+
     def test_is_not_admin(self):
         res = self.login('jhon@gmail.com', '123')
         self.assertEqual(302, res.status_code)
