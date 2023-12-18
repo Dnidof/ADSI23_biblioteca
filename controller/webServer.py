@@ -89,19 +89,32 @@ def addUsuario():
 			rol = 1 if request.values.get("rol") == "1" else 0
 			deshabilitado = 0
 
-			if usuario and nombre and correo and password and dni and rol:
-				usuarioDisponible = not gestorUsuarios.checkUsernameExists(usuario)
-				correoDisponible = not gestorUsuarios.checkEmailExists(correo)
+			if usuario and nombre and correo and password and dni and rol is not None:
 
-				if usuarioDisponible and correoDisponible:
-					gestorUsuarios.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
-				else:
+				if len(usuario) > 15:
+					errores.append("El nombre de usuario debe tener entre 1-15 caracteres")
+				if len(nombre) > 20:
+					errores.append("El nombre debe tener entre 1-20 caracteres")
+				if len(correo) > 30:
+					errores.append("El correo debe tener como máximo 30 caracteres")
+				if len(password) > 32:
+					errores.append("La contraseña debe tener como máximo 32 caracteres")
+				if len(dni) != 9:
+					errores.append("El DNI debe tener 9 caracteres")
+
+				if len(errores) == 0:
+					usuarioDisponible = not gestorUsuarios.checkUsernameExists(usuario)
+					correoDisponible = not gestorUsuarios.checkEmailExists(correo)
+
 					if not usuarioDisponible:
 						errores.append("Nombre de usuario no disponible")
 					if not correoDisponible:
 						errores.append("Correo no disponible")
 			else:
 				errores.append("Todos los campos son obligatorios")
+
+			if len(errores) == 0:
+				gestorUsuarios.addUser(usuario, nombre, correo, password, dni, rol, deshabilitado)
 
 		resp = render_template("addusuario.html", errores=errores)
 	else:
@@ -145,13 +158,24 @@ def addLibro():
 			foto = request.values.get("foto", "")
 			desc = request.values.get("desc")
 			if titulo and autor and desc:
-				books, count = library.search_books(titulo, autor)
-				if count == 0:
-					library.addBook(titulo, autor, foto, desc)
-				else:
-					errores.append("Ya existe un libro con el mismo título y el mismo autor")
+				if len(titulo) > 50:
+					errores.append("El título debe tener entre 1-50 caracteres")
+				if len(autor) > 40:
+					errores.append("El autor debe tener entre 1-40 caracteres")
+				if foto and len(foto) > 50:
+					errores.append("El link de la foto debe tener como máximo 50 caracteres")
+				if len(desc) > 65535:
+					errores.append("La descripción debe tener como máximo 65535 caracteres")
+
+				if len(errores) == 0:
+					books, count = library.search_books(titulo, autor)
+					if count != 0:
+						errores.append("Ya existe un libro con el mismo título y el mismo autor")
 			else:
 				errores.append("Rellena los campos de Título, Autor y Descripción, son obligatorios.")
+
+			if len(errores) == 0:
+				library.addBook(titulo, autor, foto, desc)
 
 		resp = render_template("addlibro.html", errores=errores)
 	else:
