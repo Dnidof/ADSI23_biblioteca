@@ -80,3 +80,41 @@ class TestAddLibro(BaseTestClass):
 											AND b.autor LIKE ? 
 								""", (f"%{'hola'}%", f"%{'hola'}%"))[0][0]
 		self.assertEqual(0, count)
+
+	def test_add_libro_limites(self):
+		self.login('james@gmail.com', '123456')
+
+		# El primer valor -> [0] será el bueno, el resto provocarán un error por cada tipo
+		titulos = ["test", "1"*51]
+		autores = ["test", "1"*41]
+		fotos = ["test", "1"*51]
+		descs = ["test", "1"*65536]
+
+		for ind_t, titulo in enumerate(titulos):
+			for ind_nom, autor in enumerate(autores):
+				for ind_f, foto in enumerate(fotos):
+					for ind_desc, desc in enumerate(descs):
+
+
+							# Saltamos la primera iteración con todos los valores correctos
+							ind_sum = ind_t + ind_nom + ind_f + ind_desc
+							if ind_sum == 0:
+								continue
+
+							res3 = self.client.post('/addlibro', data={'titulo': titulo, 'autor': autor, 'foto': foto,
+																	   'desc': desc},
+													headers={'content-type': 'application/x-www-form-urlencoded'})
+
+							page = BeautifulSoup(res3.data, features="html.parser")
+							mydivs = page.find_all("div", {"class": "error"})
+
+							errormsg = f"titulo:{titulo},autor:{autor},foto:{foto},desc:{desc}\nErrores:{[e.get_text() for e in mydivs]}"
+							self.assertEqual(ind_sum, len(mydivs), errormsg)
+
+							count = self.db.select("""
+																				SELECT count() 
+																				FROM Book b
+																					WHERE b.titulo LIKE ? 
+																					AND b.autor LIKE ? 
+																		""", (f"%{titulo}%", f"%{autor}%"))[0][0]
+							self.assertEqual(0, count)
