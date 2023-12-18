@@ -1,11 +1,11 @@
-from .LibraryController import LibraryController
+from .GestorLibros import GestorLibros
 from .GestorUsuarios import GestorUsuarios
 from flask import Flask, render_template, request, make_response, redirect
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
 
-library = LibraryController()
+library = GestorLibros()
 gestorUsuarios = GestorUsuarios()
 
 @app.before_request
