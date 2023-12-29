@@ -20,6 +20,9 @@ class User:
 		self.dni = dni
 		self.rol = int(rol)
 		self.deshabilitado = int(deshabilitado)
+		self.amigos = []
+		self.solicitudesEnviadas = []
+		self.solicitudesRecibidas = []
 
 	def __str__(self):
 		return f"{self.username} ({self.email})"
@@ -46,3 +49,48 @@ class User:
 
 	def isAdmin(self):
 		return self.rol == 1
+	
+	def esUsuario(self, username):
+		return self.username == username
+	
+	def obtenerInfoPerfil(self):
+		return {
+			'username': self.username,
+			'name': self.name,
+			'email': self.email,
+			'dni': self.dni,
+			'rol': self.rol,
+			'deshabilitado': self.deshabilitado,
+			'amigos': [amigo.username for amigo in self.amigos],
+			'solicitudesEnviadas': [solicitud.username for solicitud in self.solicitudesEnviadas],
+			'solicitudesRecibidas': [solicitud.username for solicitud in self.solicitudesRecibidas]
+		}
+	
+	def actualizarPerfil(self, perfil):
+		self.name = perfil.get('name', self.name)
+		self.email = perfil.get('email', self.email)
+		self.dni = perfil.get('dni', self.dni)
+        # ... resto de campos si necesario
+
+	def añadirAmigo(self, user):
+		self.amigos.append(user)
+
+	def eliminarAmigo(self, user):
+		self.amigos.remove(user)
+
+	def añadirSolicitud(self, user):
+		self.solicitudesEnviadas.append(user)
+
+	def eliminarSolicitud(self, user):
+		self.solicitudesEnviadas.remove(user)
+
+	def getInfoSolicitudes(self):
+		return {
+            'solicitudesEnviadas': [solicitud.username for solicitud in self.solicitudesEnviadas],
+            'solicitudesRecibidas': [solicitud.username for solicitud in self.solicitudesRecibidas]
+        }
+
+	def getInfoAmigos(self):
+		return {
+            'amigos': [amigo.username for amigo in self.amigos]
+        }
