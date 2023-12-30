@@ -192,7 +192,20 @@ def gestionarUsuarios():
 		resp = redirect(path)
 	return resp
 
+
+@app.route('/profile.html')
+def    profile():
+    user = request.user
+    resp = render_template("profile.html", user= user)
+    return resp
+
 @app.route('/amigos.html')
-def	gestionaramigos():
-	resp = render_template("amigos.html")
-	return resp
+def gestionaramigos():
+    if 'user' in dir(request) and request.user and request.user.token:
+        amigos_info = request.user.getInfoAmigos()
+        return render_template("amigos.html", friends=amigos_info['amigos'])
+    else:
+        path = request.values.get("path", "/")
+        resp = redirect(path)
+        return resp
+

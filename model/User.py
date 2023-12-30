@@ -91,6 +91,8 @@ class User:
         }
 
 	def getInfoAmigos(self):
-		return {
-            'amigos': [amigo.username for amigo in self.amigos]
-        }
+		amigos_info = {
+			'amigos': [{'username': amigo.username, 'name': amigo.name, 'profile_picture': amigo.profile_picture}
+					   for amigo in self.amigos]
+		}
+		return amigos_info

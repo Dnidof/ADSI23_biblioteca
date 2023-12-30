@@ -3,18 +3,18 @@
 {% block content %}
 <div class="container p-5 my-5 border">
 
-    <!-- ... Resto del código del formulario de búsqueda si lo necesitas ... -->
+    <!-- ... Otro contenido de la página si es necesario ... -->
 
     <hr class="hr" />
 
     <div class="row">
 
-        {% for amigo in amigos %}
+        {% for friend in friends %}
             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                 <div class="card d-flex flex-row" style="width: 18rem;">
-                    <img src="{{ amigo.profile_picture }}" class="rounded" style="max-width: 6rem; height: fit-content;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ amigo.username }}</h5>
+                        <h5 class="card-title">{{ friend.username }}</h5>
+                        <p class="card-text">{{ friend.name }}</p>
                     </div>
                 </div>
             </div>
@@ -27,4 +27,5 @@
 </div>
 
 {% endblock %}
+
 
