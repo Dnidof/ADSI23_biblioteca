@@ -191,3 +191,8 @@ def gestionarUsuarios():
 		path = request.values.get("path", "/")
 		resp = redirect(path)
 	return resp
+
+@app.route('/amigos.html')
+def	gestionaramigos():
+	resp = render_template("amigos.html")
+	return resp

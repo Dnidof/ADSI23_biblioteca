@@ -7,7 +7,10 @@
       "password": "123456",
       "dni": "12345678Z",
       "rol": "1",
-      "deshabilitado": "0"
+      "deshabilitado": "0",
+      "amigos": [],
+      "solicitudesEnviadas": [],
+      "solicitudesRecibidas": []
     },
     {
       "nombres": "Jhon Doe",
@@ -16,7 +19,10 @@
       "nomusuario": "IPB7fSC",
       "dni": "12345678Z",
       "rol": "0",
-      "deshabilitado": "0"
+      "deshabilitado": "0",
+      "amigos": [],
+      "solicitudesEnviadas": [],
+      "solicitudesRecibidas": []
     },
     {
       "nombres": "Juan Ejemplo",
@@ -25,7 +31,10 @@
       "nomusuario": "NgbZCib",
       "dni": "12345678Z",
       "rol": "0",
-      "deshabilitado": "0"
+      "deshabilitado": "0",
+      "amigos": [],
+      "solicitudesEnviadas": [],
+      "solicitudesRecibidas": []
     },
     {
       "nombres": "Juan Ejemplo",
@@ -34,7 +43,10 @@
       "nomusuario": "S_Faisg",
       "dni": "12345678Z",
       "rol": "0",
-      "deshabilitado": "0"
+      "deshabilitado": "0",
+      "amigos": [],
+      "solicitudesEnviadas": [],
+      "solicitudesRecibidas": []
     }
   ]
 }
