@@ -26,6 +26,7 @@
             <li class="nav-item"><a href="/gestionarusuarios" class="nav-link {% if request.path == '/gestionarusuarios' %}active{% endif %}">Gestionar usuarios</a></li>
             <li class="nav-item"><a href="/addlibro" class="nav-link {% if request.path == '/addlibro' %}active{% endif %}">Añadir libro</a></li>
             {% endif %}
+          <li class="nav-item"><a href="/profile.html" class="nav-link ">Profile</a></li>
           <li class="nav-item"><a href="/logout?path={{request.path}}" class="nav-link"><i class="fa fa-sign-out fa-lg"></i></a></li>
           {% else %}
           <li class="nav-item"><a href="/login" class="nav-link {% if request.path == '/login' %}active{% endif %}">Login</a></li>
