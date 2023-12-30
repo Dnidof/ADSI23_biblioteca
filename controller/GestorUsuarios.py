@@ -57,3 +57,21 @@ class GestorUsuarios:
 
     def deleteUser(self, username):
         db.update("UPDATE User SET deshabilitado = 1 WHERE nomusuario = ?", (username, ))
+
+    def get_user_by_username(self, username):
+        user_data = db.select("SELECT * from User WHERE nomusuario = ?", (username,))
+        if len(user_data) > 0:
+            return User(user_data[0][0], user_data[0][1], user_data[0][2], user_data[0][4], user_data[0][5],
+                        user_data[0][6])
+        else:
+            return None
+
+    def get_user_friends(self, user):
+        friends_data = db.select("SELECT usuarioB FROM Amigo WHERE usuarioA = ?", (user.username,))
+        friends = [self.get_user_by_username(username) for (username,) in friends_data]
+        user.amigos = friends
+        return friends
+    def getSolicitudes(self, user):
+        solicitantes_data = db.select("SELECT usuarioEnvia FROM Solicitud WHERE usuarioReceptor = ?", (user.username,))
+        user.solicitudesRecibidas = [username for (username,) in solicitantes_data]
+        return user.solicitudesRecibidas

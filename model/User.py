@@ -92,7 +92,7 @@ class User:
 
 	def getInfoAmigos(self):
 		amigos_info = {
-			'amigos': [{'username': amigo.username, 'name': amigo.name, 'profile_picture': amigo.profile_picture}
+			'amigos': [{'username': amigo.username, 'name': amigo.name}
 					   for amigo in self.amigos]
 		}
 		return amigos_info
