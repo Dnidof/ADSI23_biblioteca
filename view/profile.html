@@ -3,14 +3,16 @@
 <div class="container p-5 my-5 border">
     <div style="display: flex;">
         <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <!-- Aquí añade la imagen de la foto de perfil -->
             <img src="Foto de perfil.png" alt="Foto de perfil" style="width: 100px; height: 100px;">
             <p>Nombre de usuario: {{user.username}}</p>
             <p>Email: {{user.email}}</p>
         </div>
         <div style="flex: 3; display: flex; flex-direction: row; align-items: flex-start;">
+            <!-- Contenido del div derecho (botones) -->
             <button style="margin-right: 25px;">Editar perfil</button>
-            <a href="amigos.html"><button style="margin-right: 25px;">Amigos</button></a>
-            <a href="solicitudes.html"><button style="margin-right: 25px;">Solicitudes</button></a>
+            <button style="margin-right: 25px;">Amigos</button>
+            <button style="margin-right: 25px;">Solicitudes</button>
             <button style="margin-right: 25px;">Mis libros</button>
             <button>Reseñas</button>
         </div>
