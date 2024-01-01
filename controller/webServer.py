@@ -215,22 +215,7 @@ def misLibros():
                            total_pages=total_pages, max=max, min=min)
 
 
-@app.route('/amigos.html')
-def gestionaramigos():
-    if 'user' in dir(request) and request.user and request.user.token:
-        amigos_info = request.user.getInfoAmigos()
-        return render_template("amigos.html", friends=amigos_info['amigos'])
-    else:
-        path = request.values.get("path", "/")
-        resp = redirect(path)
-        return resp
-@app.route('/profile.html')
-def    profile():
-    user = request.user
-    resp = render_template("profile.html", user= user)
-    return resp
-
-@app.route('/amigos.html')
+@app.route('/amigos')
 def gestionaramigos():
     if 'user' in dir(request) and request.user and request.user.token:
         amigos_usernames = [amigo.username for amigo in gestorUsuarios.get_user_friends(request.user)]
@@ -249,7 +234,8 @@ def gestionaramigos():
         resp = redirect(path)
         return resp
 
-@app.route('/solicitudes.html')
+
+@app.route('/solicitudes')
 def mostrar_solicitudes():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitantes = gestorUsuarios.getSolicitudes(request.user)
@@ -260,7 +246,8 @@ def mostrar_solicitudes():
         resp = redirect(path)
         return resp
 
-@app.route('/rechazar_solicitud.html', methods=['POST'])
+
+@app.route('/rechazar_solicitud', methods=['POST'])
 def rechazar_solicitud():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitante = request.form.get("solicitante")
@@ -271,7 +258,8 @@ def rechazar_solicitud():
         resp = redirect(path)
         return resp
 
-@app.route('/aceptar_solicitud.html', methods=['GET', 'POST'])
+
+@app.route('/aceptar_solicitud', methods=['GET', 'POST'])
 def aceptar_solicitud():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitante = request.form.get("solicitante")
@@ -283,11 +271,12 @@ def aceptar_solicitud():
         return resp
 
 
-
 @app.route('/perfil_amigo/<username>')
 def perfil_amigo(username):
     if 'user' in dir(request) and request.user and request.user.token:
-            return render_template('perfil_amigo.html', amigo=username)
+        return render_template('perfil_amigo.html', amigo=username)
+
+
 @app.route('/eliminar_amigo', methods=['POST'])
 def eliminar_amigo():
     if 'user' in dir(request) and request.user and request.user.token:
@@ -298,8 +287,10 @@ def eliminar_amigo():
         path = request.values.get("path", "/")
         resp = redirect(path)
         return resp
+
+
 @app.route('/perfil_solicitud/<username>')
 def perfil_solicitud(username):
     if 'user' in dir(request) and request.user and request.user.token:
         # Obtener información de la solicitud
-            return render_template('perfil_solicitud.html', solicitud=username)
+        return render_template('perfil_solicitud.html', solicitud=username)
