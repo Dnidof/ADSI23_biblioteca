@@ -131,10 +131,15 @@ for user in usuarios:
 with open('libros.tsv', 'r', encoding="utf8") as f:
 	libros = [x.split("\t") for x in f.readlines()]
 
+cont = 1
 for author, title, cover, description in libros:
 	cur.execute("INSERT INTO Book VALUES (NULL, ?, ?, ?, ?)",
 		            (title, author, cover, description.strip()))
-
+	cur.execute("INSERT INTO CopiaLibro VALUES (NULL,?)",
+		            (cont,))
+	cur.execute("INSERT INTO CopiaLibro VALUES (NULL,?)",
+				(cont,))
+	cont +=1
 	con.commit()
 
 
