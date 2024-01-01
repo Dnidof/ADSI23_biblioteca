@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container p-5 my-5 border">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='Foto de perfil.png') }}" alt="Foto de perfil" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+            <h4 class="mt-3">Nombre de usuario: {{amigo}}</h4>
+            <!-- Botón de Eliminar Amigo -->
+            <!-- Botón de Eliminar Amigo -->
+           <form method="post" action="{{ url_for('eliminar_amigo') }}">
+                <input type="hidden" name="amigo_username" value="{{ amigo }}">
+                <button type="submit" class="btn btn-danger mt-3">Eliminar Amigo</button>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <!-- Lista de Reservas y Reseñas -->
+            <div class="row">
+                <!-- Lista de Reservas -->
+                <div class="col-md-6">
+                    <h5>Reservas</h5>
+                    <ul>
+                        {% for reserva in reservas %}
+                            <li>{{ reserva }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Lista de Reseñas -->
+                <div class="col-md-6">
+                    <h5>Reseñas</h5>
+                    <ul>
+                        {% for reseña in reseñas %}
+                            <li>{{ reseña }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega las siguientes líneas para cargar los archivos estáticos -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
+{% endblock %}

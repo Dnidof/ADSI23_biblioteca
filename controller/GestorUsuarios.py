@@ -69,9 +69,33 @@ class GestorUsuarios:
     def get_user_friends(self, user):
         friends_data = db.select("SELECT usuarioB FROM Amigo WHERE usuarioA = ?", (user.username,))
         friends = [self.get_user_by_username(username) for (username,) in friends_data]
-        user.amigos = friends
+        print(friends)
         return friends
+
     def getSolicitudes(self, user):
         solicitantes_data = db.select("SELECT usuarioEnvia FROM Solicitud WHERE usuarioReceptor = ?", (user.username,))
-        user.solicitudesRecibidas = [username for (username,) in solicitantes_data]
-        return user.solicitudesRecibidas
+        solicitantes = [username for (username,) in solicitantes_data]
+        return solicitantes
+    def aceptar_solicitud(self, receptor_username, solicitante_username):
+        db.delete("DELETE FROM Solicitud WHERE usuarioReceptor = ? AND usuarioEnvia = ?",
+                  (receptor_username, solicitante_username))
+        db.insert("INSERT INTO Amigo (usuarioA, usuarioB) VALUES (?, ?)", (receptor_username, solicitante_username))
+
+    def rechazar_solicitud(self, receptor_username, solicitante_username):
+        db.delete("DELETE FROM Solicitud WHERE usuarioReceptor = ? AND usuarioEnvia = ?",
+                  (receptor_username, solicitante_username))
+
+    def eliminar_amigo(self, receptor_username, solicitante_username):
+        db.delete("DELETE FROM Amigo WHERE usuarioA=? AND usuarioB=?",
+                  (receptor_username, solicitante_username))
+
+    def enviar_solicitud(self, receptor_username, solicitante_username):
+        existing_request = db.select("SELECT * FROM Solicitud WHERE usuarioReceptor = ? AND usuarioEnvia = ?",
+                                     (receptor_username, solicitante_username))
+        if not existing_request:
+            # No hay una solicitud pendiente, se puede insertar una nueva
+            db.insert("INSERT INTO Solicitud (usuarioReceptor, usuarioEnvia) VALUES (?, ?)",
+                      (receptor_username, solicitante_username))
+            return True  # Indicar que la solicitud se envió correctamente
+        else:
+            return False  # Indicar que no se puede enviar otra solicitud

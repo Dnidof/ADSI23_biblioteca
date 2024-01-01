@@ -252,7 +252,7 @@ def rechazar_solicitud():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitante = request.form.get("solicitante")
         gestorUsuarios.rechazar_solicitud(request.user.username, solicitante)
-        return redirect('/solicitudes.html')
+        return redirect('/solicitudes')
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)
@@ -264,7 +264,7 @@ def aceptar_solicitud():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitante = request.form.get("solicitante")
         gestorUsuarios.aceptar_solicitud(request.user.username, solicitante)
-        return redirect('/solicitudes.html')
+        return redirect('/solicitudes')
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)
