@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+
+    <h2>Lista de Solicitudes Recibidas</h2>
+
+    <hr class="hr" />
+
+    <div class="row">
+
+        {% for solicitante in solicitantes %}
+            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                <div class="card d-flex flex-row" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ solicitante }}</h5>
+                        <!-- Agrega los botones "Aceptar" y "Rechazar" en línea -->
+                        <form method="post" action="/aceptar_solicitud" style="display: inline;">
+                            <input type="hidden" name="solicitante" value="{{ solicitante }}">
+                            <button type="submit" class="btn btn-success">Aceptar</button>
+                        </form>
+                        <form method="post" action="/rechazar_solicitud" style="display: inline;">
+                            <input type="hidden" name="solicitante" value="{{ solicitante }}">
+                            <button type="submit" class="btn btn-danger">Rechazar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <hr class="hr" />
+
+</div>
+{% endblock %}

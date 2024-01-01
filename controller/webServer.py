@@ -4,9 +4,9 @@ from flask import Flask, render_template, request, make_response, redirect
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
+
 library = GestorLibros()
 gestorUsuarios = GestorUsuarios()
-
 
 @app.before_request
 def get_logged_user():
@@ -76,7 +76,6 @@ def logout():
         request.user = None
     return resp
 
-
 @app.route('/addusuario', methods=['GET', 'POST'])
 def addUsuario():
     if 'user' in dir(request) and request.user and request.user.token and request.admin:
@@ -123,7 +122,6 @@ def addUsuario():
         resp = redirect(path)
     return resp
 
-
 @app.route('/eliminarusuario', methods=['GET', 'POST'])
 def eliminarUsuario():
     if 'user' in dir(request) and request.user and request.user.token and request.admin:
@@ -134,7 +132,7 @@ def eliminarUsuario():
 
         page = int(request.values.get("page", 1))
         users, nb_users = gestorUsuarios.getUsers(page=page - 1)
-        nb_users -= 1  # remove current user
+        nb_users -= 1 # remove current user
         total_pages = (nb_users // 6) + 1
 
         # remove current user from search
@@ -149,7 +147,6 @@ def eliminarUsuario():
         path = request.values.get("path", "/")
         resp = redirect(path)
     return resp
-
 
 @app.route('/addlibro', methods=['GET', 'POST'])
 def addLibro():
@@ -186,7 +183,6 @@ def addLibro():
         resp = redirect(path)
     return resp
 
-
 @app.route('/gestionarusuarios')
 def gestionarUsuarios():
     if 'user' in dir(request) and request.user and request.user.token and request.admin:
@@ -197,33 +193,6 @@ def gestionarUsuarios():
     return resp
 
 
-@app.route('/profile')
-def profile():
-    user = request.user
-    resp = render_template("profile.html", user=user)
-    return resp
-
-
-@app.route('/misLibros')
-def misLibros():
-    books, nb_books = library.search_my_books(request.user)
-    titulo = request.values.get("title", "")
-    autor = request.values.get("author", "")
-    page = int(request.values.get("page", 1))
-    total_pages = (nb_books // 6) + 1
-    return render_template('misLibros.html', books=books, titulo=titulo, autor=autor, current_page=page,
-                           total_pages=total_pages, max=max, min=min)
-
-
-@app.route('/amigos.html')
-def gestionaramigos():
-    if 'user' in dir(request) and request.user and request.user.token:
-        amigos_info = request.user.getInfoAmigos()
-        return render_template("amigos.html", friends=amigos_info['amigos'])
-    else:
-        path = request.values.get("path", "/")
-        resp = redirect(path)
-        return resp
 @app.route('/profile.html')
 def    profile():
     user = request.user
@@ -234,15 +203,18 @@ def    profile():
 def gestionaramigos():
     if 'user' in dir(request) and request.user and request.user.token:
         amigos_usernames = [amigo.username for amigo in gestorUsuarios.get_user_friends(request.user)]
+        print("Amigos Usernames:", amigos_usernames)
 
         amigos_info = []
+
         for amigo_username in amigos_usernames:
             amigo = gestorUsuarios.get_user_by_username(amigo_username)
             if amigo:
                 amigos_info.append({
                     'username': amigo.username,
-                    'name': amigo.name,
+                    'name': amigo.name,  # Puedes añadir más detalles aquí si los necesitas
                 })
+        print("Amigos Info:", amigos_info)
         return render_template("amigos.html", amigos=amigos_info)
     else:
         path = request.values.get("path", "/")
@@ -253,53 +225,8 @@ def gestionaramigos():
 def mostrar_solicitudes():
     if 'user' in dir(request) and request.user and request.user.token:
         solicitantes = gestorUsuarios.getSolicitudes(request.user)
-        print(solicitantes)
         return render_template("solicitudes.html", solicitantes=solicitantes)
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)
         return resp
-
-@app.route('/rechazar_solicitud.html', methods=['POST'])
-def rechazar_solicitud():
-    if 'user' in dir(request) and request.user and request.user.token:
-        solicitante = request.form.get("solicitante")
-        gestorUsuarios.rechazar_solicitud(request.user.username, solicitante)
-        return redirect('/solicitudes.html')
-    else:
-        path = request.values.get("path", "/")
-        resp = redirect(path)
-        return resp
-
-@app.route('/aceptar_solicitud.html', methods=['GET', 'POST'])
-def aceptar_solicitud():
-    if 'user' in dir(request) and request.user and request.user.token:
-        solicitante = request.form.get("solicitante")
-        gestorUsuarios.aceptar_solicitud(request.user.username, solicitante)
-        return redirect('/solicitudes.html')
-    else:
-        path = request.values.get("path", "/")
-        resp = redirect(path)
-        return resp
-
-
-
-@app.route('/perfil_amigo/<username>')
-def perfil_amigo(username):
-    if 'user' in dir(request) and request.user and request.user.token:
-            return render_template('perfil_amigo.html', amigo=username)
-@app.route('/eliminar_amigo', methods=['POST'])
-def eliminar_amigo():
-    if 'user' in dir(request) and request.user and request.user.token:
-        amigo_username = request.values.get("amigo_username")  # Usar "amigo" directamente desde la URL
-        gestorUsuarios.eliminar_amigo(request.user.username, amigo_username)
-        return redirect('/amigos.html')
-    else:
-        path = request.values.get("path", "/")
-        resp = redirect(path)
-        return resp
-@app.route('/perfil_solicitud/<username>')
-def perfil_solicitud(username):
-    if 'user' in dir(request) and request.user and request.user.token:
-        # Obtener información de la solicitud
-            return render_template('perfil_solicitud.html', solicitud=username)
