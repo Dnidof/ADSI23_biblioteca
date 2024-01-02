@@ -2,16 +2,29 @@
 
 {% block content %}
 <div class="container p-5 my-5 border">
-    <h2>{{ Tema.texto }}</h2>
-    <p>{{ Tema.autor }}</p>
+    <h2>{{ tema.texto }}</h2>
+    <p>{{ tema.autor }}</p>
 
     <hr class="hr" />
 
     <h3>Comentarios</h3>
     <ul>
         {% for comentario in comentarios %}
-            <li>{{ comentario.autor }}: {{ comentario.contenido }}</li>
+            <li>{{ comentario.autor }}: {{ comentario.contenido }}: {{ comentario.fecha }}</li>
         {% endfor %}
     </ul>
+
+    <hr class="hr" />
+
+    {% if user %}
+    <form method="post" action="/post/{{ tema.cod }}">
+        <div class="form-group">
+            <label for="comment">Publicar comentario:</label>
+            <textarea class="form-control" id="comment" name="contenido" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Publicar</button>
+    </form>
+    {% endif %}
+
 </div>
 {% endblock %}

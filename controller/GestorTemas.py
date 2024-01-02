@@ -29,7 +29,7 @@ class GestorTemas:
 				LIMIT ? OFFSET ?
 		""", (f"%{texto}%", f"%{autor}%", limit, limit*page))
 		temas = [
-			Tema(p[0], p[2], p[1])
+			Tema(p[0], p[1], p[2])
 			for p in res
 		]
 

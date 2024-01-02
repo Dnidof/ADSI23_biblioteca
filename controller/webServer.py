@@ -2,6 +2,7 @@ from .GestorLibros import GestorLibros
 from .GestorTemas import GestorTemas
 from .GestorUsuarios import GestorUsuarios
 from flask import Flask, render_template, request, make_response, redirect
+from model.Tema import Tema
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
@@ -343,21 +344,33 @@ def crear_tema():
         resp = redirect(path)
         return resp
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:cod>')
 def post(cod):
+    texto = request.values.get("texto", "")
+    page = int(request.values.get("page", 1))
+    tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
+    comentarios = tema.comentarios()
+    nb_comentarios = len(comentarios)
+    total_pages = (nb_comentarios // 6) + 1
     if 'user' in dir(request) and request.user and request.user.token:
-        amigos_usernames = [amigo.username for amigo in gestorUsuarios.get_user_friends(request.user)]
+        usuario = request.user
 
-        amigos_info = []
-        for amigo_username in amigos_usernames:
-            amigo = gestorUsuarios.get_user_by_username(amigo_username)
-            if amigo:
-                amigos_info.append({
-                    'username': amigo.username,
-                    'name': amigo.name,
-                })
-        return render_template("amigos.html", amigos=amigos_info)
+    else:
+        usuario = None
+    return render_template('post.html',tema=tema, comentarios=comentarios, current_page=page, total_pages=total_pages, max=max, min=min,
+                           user=usuario)
+
+
+@app.route('/post/<int:cod>', methods=['GET', 'POST'])
+def postCrear(cod):
+    if 'user' in dir(request) and request.user and request.user.token:
+        texto = request.form.get("texto")
+        tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
+        comentarios = tema.comentarios()
+        tema.agregar_comentario(autor=request.user.username, contenido=texto)
+        return redirect('/post/<int:cod>')
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)
         return resp
+    return resp

@@ -3,10 +3,11 @@ from .Connection import Connection
 db = Connection()
 
 class Comentario:
-	def __init__(self, texto, autor, fechaHora):
-		self.texto = texto
-		self.autor = autor
-		self.fechaHora = fechaHora
+	def __init__(self, codpost, usuario, fecha, texto_comentario):
+		self.codpost = codpost
+		self.usuario = usuario
+		self.fecha = fecha
+		self.texto_comentario = texto_comentario
 
 	@property
 	def autor(self):
