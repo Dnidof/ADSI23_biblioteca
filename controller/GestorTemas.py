@@ -28,9 +28,10 @@ class GestorTemas:
 				LIMIT ? OFFSET ?
 		""", (f"%{texto}%", f"%{autor}%", limit, limit*page))
 		temas = [
-			Tema(b[0],b[1],b[2],b[3],b[4])
-			for b in res
+			Tema(p[0], p[2], p[1])
+			for p in res
 		]
+
 		return temas, count
 
 	def addTema(self, texto, autor):

@@ -321,17 +321,22 @@ def editar_perfil():
         return render_template('editarperfil.html', user=user, error=False)
 @app.route('/foro')
 def foro():
-    tema = request.values.get("tema", "")
+    texto = request.values.get("texto", "")
     page = int(request.values.get("page", 1))
-    temas, nb_temas = library.search_books(tema=tema, page=page - 1)
+    temas, nb_temas = gestor_temas.search_temas(texto=texto, page=page - 1)
     total_pages = (nb_temas // 6) + 1
-    return render_template('foro.html', temas=temas, tema=tema, current_page=page,
-                           total_pages=total_pages, max=max, min=min, user=request.user)
+    if 'user' in dir(request) and request.user and request.user.token:
+        usuario=request.user
+
+    else:
+        usuario=None
+    return render_template('foro.html', temas=temas, current_page=page,total_pages=total_pages, max=max, min=min, user=usuario)
+
 @app.route('/crear_tema', methods=['GET', 'POST'])
 def crear_tema():
     if 'user' in dir(request) and request.user and request.user.token:
         texto = request.form.get("texto")
-        gestor_temas.create_tema(texto=texto, autor=request.user.username)
+        gestor_temas.addTema(texto=texto, autor=request.user.username)
         return redirect('/foro')
     else:
         path = request.values.get("path", "/")

@@ -2,12 +2,11 @@ from .Connection import Connection
 
 db = Connection()
 
-class Book:
-	def __init__(self, cod, texto, autor, comentarios):
+class Tema:
+	def __init__(self, cod, texto, autor):
 		self.cod = cod
 		self.texto = texto
 		self.autor = autor
-		self.comentarios = comentarios
 
 	@property
 	def autor(self):
