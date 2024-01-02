@@ -1,30 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container p-5 my-5 border">
-    <h2>{{ tema.texto }}</h2>
-    <p>{{ tema.autor }}</p>
+    <!-- Agrega las referencias a Bootstrap y FontAwesome aquí -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 
-    <hr class="hr" />
+    <div class="container p-5 my-5 border">
+        <h2>{{ tema.texto }}</h2>
+        <p>{{ tema.autor }}</p>
 
-    <h3>Comentarios</h3>
-    <ul>
-        {% for comentario in comentarios %}
-            <li>{{ comentario.autor }}: {{ comentario.contenido }}: {{ comentario.fecha }}</li>
-        {% endfor %}
-    </ul>
+        <hr class="hr" />
 
-    <hr class="hr" />
+        <h3>Comentarios</h3>
+        <ul>
+            {% for comentario in comentarios %}
+                <li>{{ comentario.autor }}: {{ comentario.contenido }}: {{ comentario.fecha }}</li>
+            {% endfor %}
+        </ul>
 
-    {% if user %}
-    <form method="post" action="/post/{{ tema.cod }}">
-        <div class="form-group">
-            <label for="comment">Publicar comentario:</label>
-            <textarea class="form-control" id="comment" name="contenido" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Publicar</button>
-    </form>
-    {% endif %}
+        <hr class="hr" />
 
-</div>
+        {% if user %}
+        <form method="post" action="/post/{{ tema.cod }}">
+            <div class="form-group">
+                <label for="comment">Publicar comentario:</label>
+                <textarea class="form-control" id="comment" name="contenido" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Publicar</button>
+        </form>
+        {% endif %}
+    </div>
 {% endblock %}
