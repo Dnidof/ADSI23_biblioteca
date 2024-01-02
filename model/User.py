@@ -46,3 +46,24 @@ class User:
 
 	def isAdmin(self):
 		return self.rol == 1
+
+	def editar_perfil(self, nombre, dni):
+		try:
+			if nombre is not None and nombre != "" and dni is not None and dni != "":
+				db.update("UPDATE User SET nombre = ?, dni = ? WHERE nomusuario = ?", (nombre, dni, self.username))
+				self.name = nombre
+				self.dni = dni
+				return True
+			elif nombre is not None and nombre != "":
+				db.update("UPDATE User SET nombre = ? WHERE nomusuario = ?", (nombre, self.username))
+				self.name = nombre
+				return True
+			elif dni is not None and dni != "":
+				db.update("UPDATE User SET dni = ? WHERE nomusuario = ?", (dni, self.username))
+				self.dni = dni
+				return True
+			else:
+				return False
+		except Exception as e:
+			print(f"Error: {e}")
+			return False

@@ -294,3 +294,26 @@ def perfil_solicitud(username):
     if 'user' in dir(request) and request.user and request.user.token:
         # Obtener información de la solicitud
         return render_template('perfil_solicitud.html', solicitud=username)
+
+
+@app.route('/devolverLibro/<cod>')
+def devolver_libro(cod):
+    library.devolver_libro(cod)
+    return redirect('/misLibros')
+
+
+@app.route('/editarPerfil', methods=['GET', 'POST'])
+def editar_perfil():
+    if request.method == 'POST':
+        ##guardar info
+        nombre = request.values.get("nombre", "")
+        dni = request.values.get("dni", "")
+
+        success = request.user.editar_perfil(nombre, dni)
+        if success:
+            return redirect('/profile')
+        else:
+            return redirect('/editarPerfil')
+    else:
+        user = request.user
+        return render_template('editarperfil.html', user=user, error=False)

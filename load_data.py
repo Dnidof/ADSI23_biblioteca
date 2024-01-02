@@ -37,7 +37,7 @@ cur.execute("""
 		codpost integer primary key autoincrement,
 		nomusuario varchar(15),
 		texto_post TEXT,
-		FOREIGN KEY(nomusuario) REFERENCES User(nomusuario)
+		FOREIGN KEY(nomusuario) REFERENCES User(nomusuario) ON UPDATE CASCADE
 	)
 """)
 
@@ -48,7 +48,7 @@ cur.execute("""
 		fecha DATE,
 		texto_comentario TEXT,
 		primary key (codpost, usuario),
-		FOREIGN KEY(usuario) REFERENCES User(nomusuario), 
+		FOREIGN KEY(usuario) REFERENCES User(nomusuario) ON UPDATE CASCADE, 
 		FOREIGN KEY(codpost) REFERENCES Post(codpost)
 	)
 """)
@@ -66,8 +66,8 @@ cur.execute("""
 		usuarioEnvia varchar(15),
 		usuarioReceptor varchar(15),
 		primary key (usuarioEnvia, usuarioReceptor),
-		FOREIGN KEY (usuarioReceptor) REFERENCES  User(nomusuario),
-		FOREIGN KEY (usuarioEnvia) REFERENCES  User(nomusuario)
+		FOREIGN KEY (usuarioReceptor) REFERENCES  User(nomusuario) ON UPDATE CASCADE ,
+		FOREIGN KEY (usuarioEnvia) REFERENCES  User(nomusuario) ON UPDATE CASCADE
 	)
 """)
 
@@ -76,8 +76,8 @@ cur.execute("""
 		usuarioA varchar(15),
 		usuarioB varchar(15),
 		primary key (usuarioA, usuarioB),
-		FOREIGN KEY (usuarioA) REFERENCES  User(nomusuario),
-		FOREIGN KEY (usuarioB) REFERENCES  User(nomusuario)
+		FOREIGN KEY (usuarioA) REFERENCES  User(nomusuario) ON UPDATE CASCADE,
+		FOREIGN KEY (usuarioB) REFERENCES  User(nomusuario) ON UPDATE CASCADE
 	)
 """)
 
@@ -88,7 +88,7 @@ cur.execute("""
 		texto TEXT,
 		estrellas integer,
 		primary key (usuario, codLibro),
-		FOREIGN KEY (usuario) REFERENCES  User(nomusuario),
+		FOREIGN KEY (usuario) REFERENCES  User(nomusuario) ON UPDATE CASCADE,
 		FOREIGN KEY (codLibro) REFERENCES  Book(codLibro)
 	)
 """)
@@ -100,7 +100,7 @@ cur.execute("""
 		fechaInicio DATE,
 		fechaDev DATE,
 		primary key (usuario, codCopia, fechaInicio),
-		FOREIGN KEY (usuario) REFERENCES  User(nomusuario),
+		FOREIGN KEY (usuario) REFERENCES  User(nomusuario) ON UPDATE CASCADE,
 		FOREIGN KEY (codCopia) REFERENCES  CopiaLibro(codCopia)
 	)
 """)
@@ -110,7 +110,7 @@ cur.execute("""
 		session_hash varchar(32) primary key,
 		nomusuario varchar(15),
 		last_login float,
-		FOREIGN KEY(nomusuario) REFERENCES User(nomusuario)
+		FOREIGN KEY(nomusuario) REFERENCES User(nomusuario) ON UPDATE CASCADE
 	)
 """)
 
