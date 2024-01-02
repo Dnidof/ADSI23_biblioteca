@@ -317,3 +317,11 @@ def editar_perfil():
     else:
         user = request.user
         return render_template('editarperfil.html', user=user, error=False)
+@app.route('/foro')
+def foro():
+    tema = request.values.get("tema", "")
+    page = int(request.values.get("page", 1))
+    temas, nb_temas = library.search_books(tema=tema, page=page - 1)
+    total_pages = (nb_temas // 6) + 1
+    return render_template('foro.html', temas=temas, tema=tema, current_page=page,
+                           total_pages=total_pages, max=max, min=min)
