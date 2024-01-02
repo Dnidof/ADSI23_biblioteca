@@ -1,4 +1,5 @@
 from .GestorLibros import GestorLibros
+from .GestorTemas import GestorTemas
 from .GestorUsuarios import GestorUsuarios
 from flask import Flask, render_template, request, make_response, redirect
 
@@ -6,6 +7,7 @@ app = Flask(__name__, static_url_path='', static_folder='../view/static', templa
 
 library = GestorLibros()
 gestorUsuarios = GestorUsuarios()
+gestor_temas = GestorTemas()
 
 
 @app.before_request
@@ -324,4 +326,14 @@ def foro():
     temas, nb_temas = library.search_books(tema=tema, page=page - 1)
     total_pages = (nb_temas // 6) + 1
     return render_template('foro.html', temas=temas, tema=tema, current_page=page,
-                           total_pages=total_pages, max=max, min=min)
+                           total_pages=total_pages, max=max, min=min, user=request.user)
+@app.route('/crear_tema', methods=['GET', 'POST'])
+def crear_tema():
+    if 'user' in dir(request) and request.user and request.user.token:
+        texto = request.form.get("texto")
+        gestor_temas.create_tema(texto=texto, autor=request.user.username)
+        return redirect('/foro')
+    else:
+        path = request.values.get("path", "/")
+        resp = redirect(path)
+        return resp

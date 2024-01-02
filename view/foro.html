@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container p-5 my-5 border">
-
+     {% if user%}
     <form class="form-inline" method="post" action="/crear_tema">
       <div class="input-group mb-2 mr-sm-2">
         <label for="tema" class="col-sm-2 col-form-label">Tema</label>
@@ -12,7 +12,7 @@
           Crear Tema
       </button>
     </form>
-
+     {% endif %}
     <hr class="hr" />
 
     <div class="row">
