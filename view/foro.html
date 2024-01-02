@@ -5,11 +5,11 @@
 
     <form class="form-inline" method="post" action="/crear_tema">
       <div class="input-group mb-2 mr-sm-2">
-        <label for="topic_title" class="col-sm-2 col-form-label">Topic Title</label>
-        <input type="text" class="form-control mb-2" id="topic_title" name="topic_title" placeholder="Topic Title" {% if topic_title != "": %}value="{{topic_title}}"{% endif %}>
+        <label for="tema" class="col-sm-2 col-form-label">Tema</label>
+        <input type="text" class="form-control mb-2" id="tema" name="tema" placeholder="Tema" {% if tema != "": %}value="{{tema}}"{% endif %}>
       </div>
       <button type="submit" class="btn btn-primary">
-          Create Topic
+          Crear Tema
       </button>
     </form>
 
@@ -17,11 +17,11 @@
 
     <div class="row">
 
-        {% for topic in topics %}
+        {% for tema in temas %}
             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                 <div class="card d-flex flex-row" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">{{topic.title}}</h5>
+                        <h5 class="card-title">{{tema.title}}</h5>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
 
           {% if current_page-3 > 1: %}
           <li class="page-item">
-              <a class="page-link" href="{{request.path}}?topic_title={{topic_title}}&page=1" aria-label="Previous">
+              <a class="page-link" href="{{request.path}}?tema={{tema}}&page=1" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                   <span class="sr-only">Previous</span>
               </a>
@@ -44,12 +44,12 @@
           {% endif %}
 
         {% for page in range(max(1, current_page-3),min(total_pages+1, current_page+4)) %}
-            <li class="page-item"><a class="page-link {% if page == current_page %}active{% endif %}" href="{{request.path}}?topic_title={{topic_title}}&page={{page}}">{{page}}</a></li>
+            <li class="page-item"><a class="page-link {% if page == current_page %}active{% endif %}" href="{{request.path}}?tema={{tema}}&page={{page}}">{{page}}</a></li>
         {% endfor %}
 
         {% if current_page+3 < total_pages : %}
           <li class="page-item">
-              <a class="page-link" href="{{request.path}}?topic_title={{topic_title}}&page={{total_pages}}" aria-label="Next">
+              <a class="page-link" href="{{request.path}}?tema={{tema}}&page={{total_pages}}" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
                   <span class="sr-only">Next</span>
               </a>
