@@ -1,4 +1,5 @@
 from model import Connection, Tema, User
+from model.Tema import Tema
 from model.tools import hash_password
 
 db = Connection()

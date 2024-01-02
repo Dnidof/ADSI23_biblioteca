@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    <h2>{{ Tema.texto }}</h2>
+    <p>{{ Tema.autor }}</p>
+
+    <hr class="hr" />
+
+    <h3>Comentarios</h3>
+    <ul>
+        {% for comentario in comentarios %}
+            <li>{{ comentario.autor }}: {{ comentario.contenido }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

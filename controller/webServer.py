@@ -342,3 +342,22 @@ def crear_tema():
         path = request.values.get("path", "/")
         resp = redirect(path)
         return resp
+
+@app.route('/post/<int:post_id>')
+def post(cod):
+    if 'user' in dir(request) and request.user and request.user.token:
+        amigos_usernames = [amigo.username for amigo in gestorUsuarios.get_user_friends(request.user)]
+
+        amigos_info = []
+        for amigo_username in amigos_usernames:
+            amigo = gestorUsuarios.get_user_by_username(amigo_username)
+            if amigo:
+                amigos_info.append({
+                    'username': amigo.username,
+                    'name': amigo.name,
+                })
+        return render_template("amigos.html", amigos=amigos_info)
+    else:
+        path = request.values.get("path", "/")
+        resp = redirect(path)
+        return resp
