@@ -47,7 +47,7 @@ cur.execute("""
 		usuario varchar(15),
 		fecha DATE,
 		texto_comentario TEXT,
-		primary key (codpost, usuario),
+		primary key (codpost, usuario, texto_comentario),
 		FOREIGN KEY(usuario) REFERENCES User(nomusuario) ON UPDATE CASCADE, 
 		FOREIGN KEY(codpost) REFERENCES Post(codpost)
 	)
