@@ -14,14 +14,15 @@
             <hr>
             <h3>{{book.author}}</h3>
             <hr>
-            <p>{{book.description}}</p>
-            <a href="/resenas/{{book.id}}" class="btn btn-primary">Reseñas</a>
-            <p class="mt-3">Copias disponibles: {{disponibles}}/{{copias}}</p>
-            {% if disponibles > 0 %}
-                <a href="/reservar/{{book.id}}" class="btn btn-danger">Reservar</a>
-            {% else %}
-                <a href="" class="btn btn-danger disabled">Reservar</a>
-            {% endif %}
+            <form class="form-inline" method="post" action="/crear_reserva">
+                <div class="input-group mb-2 mr-sm-2">
+                    <label class="col-sm-2 col-form-label" for="email">Hasta cuando quieres reservar el libro?</label>
+                    <input type="date" id="date" name="date" class="form-control mb-2" />
+                </div>
+                <p>Recuerda que el periodo maximo de reserva son 2 meses</p>
+                <input hidden type="text" id="book_id" name="book_id" value="{{book.id}}" />
+                <button type="submit" class="btn btn-primary btn-block mb-4">Reservar</button>
+            </form>
         </div>
 </div>
 {% endblock %}

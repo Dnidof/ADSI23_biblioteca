@@ -1,5 +1,6 @@
 from .Connection import Connection
 from .Resenia import Resenia
+from .CopiaLibro import CopiaLibro
 
 db = Connection()
 
@@ -29,3 +30,12 @@ class Book:
 				WHERE codLibro = ?
 		""", (self.id,))
 		return [Resenia(*r) for r in res]
+	
+	def get_copies(self) -> list[CopiaLibro]:
+		res = db.select("""
+				SELECT codCopia
+				FROM CopiaLibro
+				WHERE codLibro = ?
+		""", (self.id,))
+		res = [CopiaLibro(*r) for r in res]
+		return res

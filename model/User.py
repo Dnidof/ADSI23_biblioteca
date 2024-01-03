@@ -14,7 +14,7 @@ class Session:
 
 class User:
 	def __init__(self, username, name, email, dni, rol, deshabilitado):
-		self.username = username
+		self.username: str = username
 		self.name = name
 		self.email = email
 		self.dni = dni

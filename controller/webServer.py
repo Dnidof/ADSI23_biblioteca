@@ -1,6 +1,7 @@
 from .GestorLibros import GestorLibros
 from .GestorTemas import GestorTemas
 from .GestorUsuarios import GestorUsuarios
+from .GestorReservas import GestorReservas, ReservaImposible
 from flask import Flask, render_template, request, make_response, redirect
 from model.Tema import Tema
 
@@ -9,7 +10,7 @@ app = Flask(__name__, static_url_path='', static_folder='../view/static', templa
 library = GestorLibros()
 gestorUsuarios = GestorUsuarios()
 gestor_temas = GestorTemas()
-
+gestor_reservas = GestorReservas()
 
 @app.before_request
 def get_logged_user():
@@ -225,8 +226,36 @@ def libro(cod):
         libro = library.get_book(cod)
     except IndexError:
         return "No existe el libro"
-    resp = render_template("book.html", book=libro)
+    copias = libro.get_copies()
+    disponibles = len([copia for copia in copias if copia.disponible()])
+    resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles)
     return resp
+
+@app.route('/crear_reserva', methods=['POST'])
+def crear_reserva():
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    cod = request.form.get("book_id")
+    book = library.get_book(cod)
+    date = request.form.get("date")
+    try:
+        gestor_reservas.crear_reserva(book, request.user, date)
+        resp = redirect("/misLibros")
+    except ReservaImposible as e:
+        return str(e)
+    return resp
+
+@app.route('/reservar/<cod>')
+def reservar(cod):
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    libro = library.get_book(cod)
+    copias = libro.get_copies()
+    resp = render_template("reservar_form.html", book=libro, copias=copias)
+    return resp
+
 
 @app.route('/misLibros')
 def misLibros():
