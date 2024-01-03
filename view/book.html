@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container p-5 my-5 border">
+    <div style="display: flex;">
+        <div style="flex: 0.5; display: flex; flex-direction: column; align-items: center;">
+            {% if book.cover %}
+                <img src="{{book.cover}}" alt="Caratula", style="height: 286px; width: 175px;">
+            {% else %}  
+                <img src="https://islandpress.org/sites/default/files/default_book_cover_2015.jpg" alt="Caratula" style="height: 286px; width: 175px;">
+            {% endif %}
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column;">
+            <h1>{{book.title}}</h1>
+            <hr>
+            <h3>{{book.author}}</h3>
+            <hr>
+            <p>{{book.description}}</p>
+            <a href="/resenas/{{book.id}}" class="btn btn-primary">Reseñas</a>
+        </div>
+</div>
+{% endblock %}

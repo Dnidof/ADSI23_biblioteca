@@ -206,6 +206,27 @@ def profile():
     resp = render_template("profile.html", user=user)
     return resp
 
+@app.route('/resenas/<cod>')
+def resenas(cod):
+    try:
+        resenas = library.get_resenas(cod)
+    except IndexError:
+        return "No existe el libro"
+    page = int(request.values.get("page", 1))
+    first = (page - 1) * 6
+    total_pages = (len(resenas) // 6) + 1
+    resp = render_template("resenas.html", resenas=resenas[first:first + 6], current_page=page,
+                           total_pages=total_pages, max=max, min=min)
+    return resp
+
+@app.route('/libro/<cod>')
+def libro(cod):
+    try:
+        libro = library.get_book(cod)
+    except IndexError:
+        return "No existe el libro"
+    resp = render_template("book.html", book=libro)
+    return resp
 
 @app.route('/misLibros')
 def misLibros():

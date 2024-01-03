@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+
+    <hr class="hr" />
+
+    <div class="row">
+
+        {% if resenas|length < 1 %}
+            <div class="col-lg-12 col-md-12 col-sm-12 my-2">
+                <h3 class="text-center">No hay reseñas</h3>
+            </div>
+        {% endif %}
+
+
+        {% for resena in resenas %}
+            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                <div class="card d-flex flex-row" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{resena.autor}}</h5>
+                        {% if resena.texto: %}
+                        <p class="card-text">{{resena.texto}}</p>
+                        <p class="card-text">{{resena.estrellas}} / 5</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <hr class="hr" />
+
+    <nav>
+      <ul class="pagination justify-content-center">
+
+          {% if current_page-3 > 1: %}
+          <li class="page-item">
+              <a class="page-link" href="{{request.path}}?page=1" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+              </a>
+          </li>
+          {% endif %}
+
+        {% for page in range(max(1, current_page-3),min(total_pages+1, current_page+4)) %}
+            <li class="page-item"><a class="page-link {% if page == current_page %}active{% endif %}" href="{{request.path}}?page={{page}}">{{page}}</a></li>
+        {% endfor %}
+
+        {% if current_page+3 < total_pages : %}
+          <li class="page-item">
+              <a class="page-link" href="{{request.path}}?page={{total_pages}}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+              </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+
+</div>
+
+{% endblock %}

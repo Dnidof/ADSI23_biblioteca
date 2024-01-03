@@ -1,4 +1,4 @@
-from model import Connection, Book, User
+from model import Connection, Book, User, Resenia
 from model.tools import hash_password
 
 db = Connection()
@@ -13,7 +13,7 @@ class GestorLibros:
 		return cls.__instance
 
 
-	def search_books(self, titulo="", autor="", limit=6, page=0):
+	def search_books(self, titulo="", autor="", limit=6, page=0) -> tuple[list[Book], int]:
 		count = db.select("""
 				SELECT count() 
 				FROM Book b
@@ -35,6 +35,7 @@ class GestorLibros:
 
 	def addBook(self, titulo, autor, foto, desc):
 		db.insert("INSERT INTO Book VALUES(NULL, ?, ?, ?, ?)", (titulo, autor, foto, desc))
+
 	def search_my_books(self, user, titulo="", autor="", limit=6, page=0):
 		res = db.select("""
 				SELECT CopiaLibro.codCopia, b.*
@@ -66,3 +67,15 @@ class GestorLibros:
 
 	def devolver_libro(self, cod):
 		db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
+
+	def get_book(self, cod: int) -> Book:
+		res = db.select("""
+				SELECT *
+				FROM Book
+				WHERE codLibro = ?
+		""", (cod,))
+		return Book(res[0][0],res[0][1],res[0][2],res[0][3],res[0][4])
+	
+	def get_resenas(self, cod: int) -> list[Resenia.Resenia]:
+		book = self.get_book(cod)
+		return book.get_resenas()
