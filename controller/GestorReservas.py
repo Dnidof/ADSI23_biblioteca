@@ -55,13 +55,20 @@ class GestorReservas:
 				VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
 		
 	def devolver_libro(self, cod):
-		db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
+		db.update("UPDATE Reserva SET Fechadev = DATE('now') WHERE codCopia = ? AND fechaDev > DATE('now')", (cod,))
 
-	def get_reservas_usuario(self, usuario: User) -> list[Reserva]:
+	def get_reservas_usuario(self, usuario: User, titulo: str = "", author: str = "") -> list[Reserva]:
 		username = usuario.username
 		res = db.select("""
-				SELECT codCopia, fechaInicio, fechaDev
+				SELECT Reserva.codCopia, fechaInicio, fechaDev, b.*
 				FROM Reserva
+				JOIN CopiaLibro ON Reserva.codCopia = CopiaLibro.codCopia
+				JOIN Book b ON CopiaLibro.codLibro = b.codLibro
 				WHERE usuario = ?
-		""", (username,))
-		return [Reserva(*r) for r in res].sort(key=lambda r: r.fechaDev)
+				AND b.titulo LIKE ?
+				AND b.autor LIKE ?
+		""", (username, f"%{titulo}%", f"%{author}%"))
+		# si esto funciona me descojono
+		reservas = [Reserva(r[0], r[1], r[2], Book(*r[3:])) for r in res]
+		reservas.sort(key=lambda r: r.fechaDev, reverse=True)
+		return reservas

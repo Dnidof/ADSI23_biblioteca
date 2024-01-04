@@ -46,7 +46,6 @@ class GestorLibros:
 				WHERE b.titulo LIKE ? 
 					AND b.autor LIKE ? 
 					And nomUsuario LIKE ?
-					AND fechaDev is null 
 		""", (f"%{titulo}%", f"%{autor}%",f"{user.username}"))
 		count = db.select("""
 				SELECT count()
@@ -57,7 +56,6 @@ class GestorLibros:
 				WHERE b.titulo LIKE ? 
 					AND b.autor LIKE ? 
 					And nomUsuario LIKE ?
-					AND fechaDev is null 
 		""", (f"%{titulo}%", f"%{autor}%",f"{user.username}"))[0][0]
 		books = [
 			(b[0],Book(b[1],b[2],b[3],b[4],b[5]))

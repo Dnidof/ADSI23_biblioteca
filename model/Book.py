@@ -9,7 +9,7 @@ class Book:
 		self.id = id
 		self.title = title
 		self.author = author
-		self.cover = cover
+		self.cover = cover if cover else "Default_cover.jpg"
 		self.description = description
 
 	@property

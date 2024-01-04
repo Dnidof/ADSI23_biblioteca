@@ -22,18 +22,27 @@
 
     <div class="row">
 
-        {% for cod,book in books %}
+        {% for reserva in books %}
             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                 <div class="card d-flex flex-row" style="width: 18rem;">
-                    {% if book.cover: %}
-                        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+                    {% if reserva.book.cover: %}
+                        <img src="{{reserva.book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
                     {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{book.title}}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{book.author}}</h6>
-                        {% if book.description: %}
-                        <p class="card-text">{{book.description}}</p>
-                        <a href="devolverLibro/{{cod}}"><button class="btn btn-primary" style="margin-right: 25px;">Devolver</button></a>
+                        <a href="/libro/{{reserva.book.id}}"><h5 class="card-title">{{reserva.book.title}}</h5></a>
+                        <h6 class="card-subtitle mb-2 text-muted">{{reserva.book.author}}</h6>
+                        {% if reserva.book.description: %}
+                        <p class="card-text">{{reserva.book.description[:150] + "..."}}</p>
+                        {% endif %}
+                        <hr/>
+                        {% if reserva.is_active(): %}
+                        <div class="" style="display: flex; flex-direction: column;">
+                            <a href="devolverLibro/{{reserva.codCopia}}"><button class="btn btn-primary" style="margin-right: 25px;">Devolver</button></a>
+                            <p>Has de devolver este libro el:<br>{{reserva.fechaDev.date()}}</p>
+                        </div>
+                        {% else: %}
+                        <p class="card-text">Tomaste prestado este libro el:<br>{{reserva.fechaInicio.date()}}</p>
+                        <p class="card-text">Has devuelto este libro el:<br>{{reserva.fechaDev.date()}}</p>
                         {% endif %}
                     </div>
                 </div>
