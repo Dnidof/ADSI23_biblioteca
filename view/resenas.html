@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<style>
+    .star-rating {
+      font-size: 25px;
+      display: inline-block;
+      width: 250px;
+      height: 50px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+  
+    .rated {
+      color: #ffcc00;
+    }
+  
+  </style>
+  
 <div class="container p-5 my-5 border">
 
     <h4 class="text-center">Reseñas de:<br></h4>
@@ -23,8 +41,10 @@
                         <h5 class="card-title">{{resena.autor}}</h5>
                         {% if resena.texto: %}
                         <p class="card-text">{{resena.texto}}</p>
-                        <p class="card-text">{{resena.estrellas}} / 5</p>
                         {% endif %}
+                        {% for n in range(1,6) %}
+                            <span class="star {% if n <= resena.estrellas %}rated{% endif %}">★</span>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
