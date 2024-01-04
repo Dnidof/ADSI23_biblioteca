@@ -398,7 +398,7 @@ def crear_tema():
 def post(cod):
     texto = request.values.get("texto", "")
     page = int(request.values.get("page", 1))
-    tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
+    tema = Tema(cod, "", "")
     comentarios = tema.comentarios()
     nb_comentarios = len(comentarios)
     total_pages = (nb_comentarios // 6) + 1
@@ -415,7 +415,7 @@ def post(cod):
 def postCrear(cod):
     if 'user' in dir(request) and request.user and request.user.token:
         texto = request.form.get("contenido")
-        tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
+        tema = Tema(cod, "", "")
         comentarios = tema.comentarios()
         tema.agregar_comentario(autor=request.user.username, contenido=texto)
         return redirect(f'/post/{cod}')

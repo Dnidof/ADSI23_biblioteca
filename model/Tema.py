@@ -19,7 +19,6 @@ class Tema:
         self._autor = value
 
     def comentarios(self):
-        # Realiza una consulta para obtener todos los comentarios asociados a este tema
         comentarios_data = db.select("SELECT * FROM Comentario WHERE codpost = ?", (self.cod,))
 
         comentarios = [Comentario(*comentario_data) for comentario_data in comentarios_data]
