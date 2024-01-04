@@ -1,3 +1,4 @@
+import sqlite3
 from model.User import User
 from model.Book import Book
 from model.Reserva import Reserva
@@ -50,10 +51,16 @@ class GestorReservas:
 			raise ReservaImposible("No se puede reservar para una fecha posterior a 15 días")
 		if usuario.deshabilitado:
 			raise ReservaImposible("El usuario está deshabilitado")
-		db.insert("""
-				INSERT INTO Reserva (codCopia, usuario, fechaInicio, fechaDev)
-				VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
-		
+		for copia in disponibles:
+			try:
+				db.insert("""
+						INSERT INTO Reserva (codCopia, usuario, fechaInicio, fechaDev)
+						VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
+				return
+			except sqlite3.IntegrityError:
+				continue
+		raise ReservaImposible("No se ha podido reservar. Probablemente ya hayas reservado y devuelto hoy la unica copia disponible de este libro. Prueba mañana.")
+
 	def devolver_libro(self, cod):
 		db.update("UPDATE Reserva SET Fechadev = DATE('now') WHERE codCopia = ? AND fechaDev > DATE('now')", (cod,))
 
