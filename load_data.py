@@ -10,6 +10,7 @@ cur = con.cursor()
 
 
 ### Create tables
+
 cur.execute("""
 	CREATE TABLE Book(
 		codLibro integer primary key AUTOINCREMENT,
