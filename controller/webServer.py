@@ -238,7 +238,7 @@ def resena(cod):
     try:
         libro = library.get_book(cod)
     except IndexError:
-        return "No existe el libro"
+        return render_template("error.html", error="No existe el libro")
     logged = 'user' in dir(request) and request.user and request.user.token
     if not logged:
         return redirect("/login")
@@ -258,7 +258,8 @@ def crear_resena():
         rating = int(request.form.get("rating"))
         book.add_resena(user, texto, rating)
     except ValueError as e:
-        return str(e)
+        return render_template("error.html", error=str(e))
+
     resp = redirect(f"/libro/{cod}")
     return resp
 
@@ -274,7 +275,7 @@ def crear_reserva():
         gestor_reservas.crear_reserva(book, request.user, date)
         resp = redirect("/misLibros")
     except ReservaImposible as e:
-        return str(e)
+        return render_template("error.html", error=str(e))
     return resp
 
 @app.route('/reservar/<cod>')
