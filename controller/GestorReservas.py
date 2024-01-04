@@ -69,6 +69,6 @@ class GestorReservas:
 				AND b.autor LIKE ?
 		""", (username, f"%{titulo}%", f"%{author}%"))
 		# si esto funciona me descojono
-		reservas = [Reserva(r[0], r[1], r[2], Book(*r[3:])) for r in res]
+		reservas = [Reserva(r[0], r[1], r[2], Book(*r[3:]), usuario) for r in res]
 		reservas.sort(key=lambda r: r.fechaDev, reverse=True)
 		return reservas

@@ -1,6 +1,7 @@
 from .Connection import Connection
 from .Resenia import Resenia
 from .CopiaLibro import CopiaLibro
+from .User import User
 
 db = Connection()
 
@@ -39,3 +40,11 @@ class Book:
 		""", (self.id,))
 		res = [CopiaLibro(*r) for r in res]
 		return res
+	
+	def ha_sido_resenado_por(self, usuario: User) -> bool:
+		res = db.select("""
+				SELECT *
+				FROM Resenia
+				WHERE codLibro = ? AND usuario = ?
+		""", (self.id, usuario.username))
+		return len(res) > 0

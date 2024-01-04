@@ -46,6 +46,9 @@
                         <p class="card-text">Tomaste prestado este libro el:<br>{{reserva.fechaInicio.date()}}</p>
                         <p class="card-text">Has devuelto este libro el:<br>{{reserva.fechaDev.date()}}</p>
                         {% endif %}
+                        {% if reserva.resenable(): %}
+                        <a href="/resena/{{reserva.book.id}}"><button class="btn btn-primary">Reseñar</button></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

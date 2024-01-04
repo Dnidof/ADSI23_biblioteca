@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- <script>
+
+</script> -->
+<div class="container p-5 my-5 border">
+
+<form class="form-inline" method="POST">
+
+    <div class="input-group mb-2 mr-sm-2">
+      <label class="col-sm-2 col-form-label" for="email">Email address</label>
+      <input readonly value="{{user.email}}" type="email" id="email" name="email" class="form-control mb-2" />
+    </div>
+
+    <div class="input-group mb-2 mr-sm-2">
+      <label class="col-sm-2 col-form-label" for="email">Username</label>
+      <input readonly value="{{user.username}}" id="nombre_usuario" name="Username" class="form-control mb-2" />
+    </div>
+
+    <div class="input-group mb-2 mr-sm-2">
+      <label class="col-sm-2 col-form-label" for="email">Name</label>
+      <input placeholder="{{user.name}}" id="nombre" name="nombre" class="form-control mb-2" />
+    </div>
+
+    <div class="input-group mb-2 mr-sm-2">
+      <label class="col-sm-2 col-form-label" for="email">DNI</label>
+      <input pattern="^\d{8}[a-zA-Z]$" title="Introduce un DNI válido" placeholder="{{user.dni}}" id="dni" name="dni" class="form-control mb-2" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button>
+
+
+</form>
+
+</div>
+{% endblock %}
