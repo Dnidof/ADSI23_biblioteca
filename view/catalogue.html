@@ -25,12 +25,7 @@
         {% for book in books %}
             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                 <div class="card d-flex flex-row" style="width: 18rem;">
-                    {% if book.cover: %}
-                        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
-                        {% else %}
-                        
-                        <img src="https://islandpress.org/sites/default/files/default_book_cover_2015.jpg" class="rounded" style="max-width: 6rem; height: fit-content;">
-                    {% endif %}
+                    <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
                     <div class="card-body">
                         <h5 class="card-title">{{book.title}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{book.author}}</h6>
