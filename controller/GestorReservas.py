@@ -54,3 +54,5 @@ class GestorReservas:
 				VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
 		
 		
+	def devolver_libro(self, cod):
+		db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))

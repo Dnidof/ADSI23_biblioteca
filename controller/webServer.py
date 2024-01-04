@@ -351,7 +351,7 @@ def perfil_solicitud(username):
 
 @app.route('/devolverLibro/<cod>')
 def devolver_libro(cod):
-    library.devolver_libro(cod)
+    gestor_reservas.devolver_libro(cod)
     return redirect('/misLibros')
 
 

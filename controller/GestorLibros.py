@@ -65,9 +65,6 @@ class GestorLibros:
 		]
 		return books, count
 
-	def devolver_libro(self, cod):
-		db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
-
 	def get_book(self, cod: int) -> Book:
 		res = db.select("""
 				SELECT *
