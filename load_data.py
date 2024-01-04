@@ -47,10 +47,12 @@ cur.execute("""
 		usuario VARCHAR(15),
 		fecha DATE DEFAULT CURRENT_DATE,
 		texto_comentario TEXT,
-		PRIMARY KEY (texto_comentario, fecha),
+		PRIMARY KEY (codpost, usuario, fecha),
 		FOREIGN KEY (usuario) REFERENCES User(nomusuario) ON UPDATE CASCADE, 
 		FOREIGN KEY (codpost) REFERENCES Post(codpost)
 	)
+
+
 """)
 
 cur.execute("""
