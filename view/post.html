@@ -22,7 +22,7 @@
         <hr class="hr" />
 
         {% if user %}
-        <form method="post" action="/post/{{ tema.cod }}">
+        <form method="post" action="/post/{{ tema.cod }}/crearComentario">
             <div class="form-group">
                 <label for="comment">Publicar comentario:</label>
                 <textarea class="form-control" id="comment" name="contenido" rows="3"></textarea>

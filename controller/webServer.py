@@ -411,10 +411,10 @@ def post(cod):
                            user=usuario)
 
 
-@app.route('/post/<int:cod>', methods=['GET', 'POST'])
+@app.route('/post/<int:cod>/crearComentario', methods=['GET', 'POST'])
 def postCrear(cod):
     if 'user' in dir(request) and request.user and request.user.token:
-        texto = request.form.get("texto")
+        texto = request.form.get("contenido")
         tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
         comentarios = tema.comentarios()
         tema.agregar_comentario(autor=request.user.username, contenido=texto)
