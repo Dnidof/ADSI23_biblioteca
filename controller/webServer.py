@@ -216,8 +216,9 @@ def resenas(cod):
     page = int(request.values.get("page", 1))
     first = (page - 1) * 6
     total_pages = (len(resenas) // 6) + 1
+    book = library.get_book(cod)
     resp = render_template("resenas.html", resenas=resenas[first:first + 6], current_page=page,
-                           total_pages=total_pages, max=max, min=min)
+                           total_pages=total_pages, max=max, min=min, book=book)
     return resp
 
 @app.route('/libro/<cod>')
