@@ -1,5 +1,6 @@
 from .Comentario import Comentario
 from .Connection import Connection
+from datetime import datetime
 
 db = Connection()
 
@@ -26,5 +27,7 @@ class Tema:
         return comentarios
 
     def agregar_comentario(self, autor, contenido):
-        # Añade un nuevo comentario a la base de datos
-        db.insert("INSERT INTO Comentario (codpost, usuario, texto_comentario) VALUES (?, ?, ?)", (self.cod, autor, contenido))
+        fecha_hora_actual = datetime.now()
+        fecha_hora_actual_str = fecha_hora_actual.strftime('%Y-%m-%d %H:%M:%S')
+
+        db.insert("INSERT INTO Comentario (codpost, usuario, fecha, texto_comentario) VALUES (?, ?, ?, ?)",(self.cod, autor, fecha_hora_actual_str, contenido))

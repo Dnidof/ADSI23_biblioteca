@@ -15,7 +15,7 @@
         <h3>Comentarios</h3>
         <ul>
             {% for comentario in comentarios %}
-                <li>{{ comentario.autor }}: {{ comentario.contenido }}: {{ comentario.fecha }}</li>
+                <li>{{ comentario.usuario }}: {{ comentario.texto_comentario }}: {{ comentario.fecha }}</li>
             {% endfor %}
         </ul>
 

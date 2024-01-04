@@ -42,14 +42,14 @@ cur.execute("""
 """)
 
 cur.execute("""
-	CREATE TABLE Comentario(
-		codpost integer,
-		usuario varchar(15),
-		fecha DATE,
+	CREATE TABLE Comentario (
+		codpost INTEGER,
+		usuario VARCHAR(15),
+		fecha DATE DEFAULT CURRENT_DATE,
 		texto_comentario TEXT,
-		primary key (codpost, usuario, texto_comentario),
-		FOREIGN KEY(usuario) REFERENCES User(nomusuario) ON UPDATE CASCADE, 
-		FOREIGN KEY(codpost) REFERENCES Post(codpost)
+		PRIMARY KEY (texto_comentario, fecha),
+		FOREIGN KEY (usuario) REFERENCES User(nomusuario) ON UPDATE CASCADE, 
+		FOREIGN KEY (codpost) REFERENCES Post(codpost)
 	)
 """)
 
