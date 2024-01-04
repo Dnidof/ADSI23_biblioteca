@@ -418,7 +418,7 @@ def postCrear(cod):
         tema = Tema(cod, "", "")  # Debes obtener el tema real de tu base de datos
         comentarios = tema.comentarios()
         tema.agregar_comentario(autor=request.user.username, contenido=texto)
-        return redirect('/post/<int:cod>')
+        return redirect(f'/post/{cod}')
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)

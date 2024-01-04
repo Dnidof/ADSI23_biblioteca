@@ -23,11 +23,10 @@ class Tema:
         comentarios_data = db.select("SELECT * FROM Comentario WHERE codpost = ?", (self.cod,))
 
         comentarios = [Comentario(*comentario_data) for comentario_data in comentarios_data]
-
         return comentarios
 
     def agregar_comentario(self, autor, contenido):
         fecha_hora_actual = datetime.now()
         fecha_hora_actual_str = fecha_hora_actual.strftime('%Y-%m-%d %H:%M:%S')
-        print("Datos a insertar:", self.cod, autor, contenido, fecha_hora_actual_str)
+        print("Datos a insertar:", self.cod, autor, fecha_hora_actual_str, contenido)
         db.insert("INSERT INTO Comentario (codpost, usuario, fecha, texto_comentario) VALUES (?, ?, ?, ?)",(self.cod, autor, fecha_hora_actual_str, contenido))
