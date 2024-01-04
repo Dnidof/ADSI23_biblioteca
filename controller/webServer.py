@@ -226,9 +226,10 @@ def libro(cod):
         libro = library.get_book(cod)
     except IndexError:
         return "No existe el libro"
+    logged = 'user' in dir(request) and request.user and request.user.token
     copias = libro.get_copies()
     disponibles = len([copia for copia in copias if copia.disponible()])
-    resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles)
+    resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles, logged=logged)
     return resp
 
 @app.route('/crear_reserva', methods=['POST'])
