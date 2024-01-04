@@ -27,6 +27,8 @@
                 <div class="card d-flex flex-row" style="width: 18rem;">
                     {% if reserva.book.cover: %}
                         <img src="{{reserva.book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+                    {% else %}
+                        <img src="https://islandpress.org/sites/default/files/default_book_cover_2015.jpg" class="rounded" style="max-width: 6rem; height: fit-content;">
                     {% endif %}
                     <div class="card-body">
                         <a href="/libro/{{reserva.book.id}}"><h5 class="card-title">{{reserva.book.title}}</h5></a>
