@@ -1,5 +1,6 @@
 from model.User import User
 from model.Book import Book
+from model.Reserva import Reserva
 from model import Connection
 from datetime import datetime, timedelta
 
@@ -53,6 +54,14 @@ class GestorReservas:
 				INSERT INTO Reserva (codCopia, usuario, fechaInicio, fechaDev)
 				VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
 		
-		
 	def devolver_libro(self, cod):
 		db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
+
+	def get_reservas_usuario(self, usuario: User) -> list[Reserva]:
+		username = usuario.username
+		res = db.select("""
+				SELECT codCopia, fechaInicio, fechaDev
+				FROM Reserva
+				WHERE usuario = ?
+		""", (username,))
+		return [Reserva(*r) for r in res].sort(key=lambda r: r.fechaDev)
