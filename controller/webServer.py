@@ -232,6 +232,35 @@ def libro(cod):
     resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles, logged=logged)
     return resp
 
+@app.route('/resena/<cod>')
+def resena(cod):
+    try:
+        libro = library.get_book(cod)
+    except IndexError:
+        return "No existe el libro"
+    logged = 'user' in dir(request) and request.user and request.user.token
+    if not logged:
+        return redirect("/login")
+    resp = render_template("resena_form.html", book=libro)
+    return resp
+
+@app.route('/crear_resena', methods=['POST'])
+def crear_resena():
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    cod = request.form.get("book_id")
+    book = library.get_book(cod)
+    user = request.user
+    texto = request.form.get("resena")
+    try:
+        rating = int(request.form.get("rating"))
+        book.add_resena(user, texto, rating)
+    except ValueError as e:
+        return str(e)
+    resp = redirect(f"/libro/{cod}")
+    return resp
+
 @app.route('/crear_reserva', methods=['POST'])
 def crear_reserva():
     if 'user' not in dir(request) or not request.user or not request.user.token:
