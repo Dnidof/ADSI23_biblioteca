@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container p-5 my-5 border">
+
+        <form class="form-inline" method="POST" id="reviewForm">
+
+            <h1> ¿Quieres añadir una reseña?</h1>
+
+            <div class="input-group mb-2 mr-sm-2">
+              <label class="col-sm-2 col-form-label" for="textoReseña">Texto</label>
+              <input  id="textoReseña" name="textoReseña" class="form-control mb-2" />
+            </div>
+            <input type="hidden" id="ratingValue" name="ratingValue" value="">
+            <input type="hidden" id="noReview" name="noReview" value="0">
+            <div class="rating" id="rating">
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
+                <input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
+                <input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mb-4">Subir reseña</button>
+            <button type="button" class="btn btn-primary btn-block mb-4" id="noReviewBtn">No quiero subir una reseña</button>
+        </form>
+    </div>
+    <style>
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+         }
+
+        .rating input {
+          display: none;
+        }
+
+        .rating label {
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          background-image: url('/estrella-sin-relleno.png');
+          background-size: cover;
+        }
+
+        .rating input:checked ~ label {
+          background-image: url('/estrella-con-relleno.png');
+        }
+
+    </style>
+    <script>
+        document.getElementById('noReviewBtn').addEventListener('click', function() {
+        document.getElementById('noReview').value = '1'; // Cambiar el valor de noReview a 1
+        document.getElementById('reviewForm').submit(); // Enviar el formulario
+        });
+        const stars = document.querySelectorAll('.rating input');
+
+          stars.forEach((star) => {
+            star.addEventListener('change', (e) => {
+              const clickedStar = e.target;
+              const starsArray = Array.from(stars);
+              const clickedIndex = starsArray.indexOf(clickedStar);
+
+              starsArray.forEach((star, index) => {
+                if (index <= clickedIndex) {
+                  star.checked = true;
+                }
+              });
+
+              const ratingValue = clickedIndex;
+              document.getElementById('ratingValue').value = 5 - ratingValue;
+            });
+          });
+    </script>
+{% endblock %}
