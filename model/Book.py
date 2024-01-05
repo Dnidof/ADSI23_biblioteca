@@ -1,6 +1,7 @@
 from .Connection import Connection
 from .Resenia import Resenia
 from .CopiaLibro import CopiaLibro
+from .User import User
 
 db = Connection()
 
@@ -39,3 +40,20 @@ class Book:
 		""", (self.id,))
 		res = [CopiaLibro(*r) for r in res]
 		return res
+	
+	def ha_sido_resenado_por(self, usuario: User) -> bool:
+		res = db.select("""
+				SELECT *
+				FROM Resenia
+				WHERE codLibro = ? AND usuario = ?
+		""", (self.id, usuario.username))
+		return len(res) > 0
+	
+	def add_resena(self, usuario: User, texto: str, rating: int):
+		if rating < 1 or rating > 5:
+			raise ValueError("Rating must be between 1 and 5")
+		if self.ha_sido_resenado_por(usuario):
+			raise ValueError("User has already reviewed this book")
+		db.insert("""
+				INSERT INTO Resenia VALUES(?, ?, ?, ?)
+		""", (self.id, usuario.username, texto, rating))

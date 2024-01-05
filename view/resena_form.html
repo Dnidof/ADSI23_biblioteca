@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .star-rating {
+    font-size: 25px;
+    display: inline-block;
+    width: 250px;
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .rated {
+    color: #ffcc00;
+  }
+
+</style>
+
+<div class="container p-5 my-5 border">
+  <div style="display: flex;">
+    <div style="flex: 0.5; display: flex; flex-direction: column; align-items: center;">
+      {% if book.cover %}
+        <img src="{{book.cover}}" alt="Caratula", style="height: 286px; width: 175px;">
+      {% else %}  
+        <img src="https://islandpress.org/sites/default/files/default_book_cover_2015.jpg" alt="Caratula" style="height: 286px; width: 175px;">
+      {% endif %}
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <h1>{{book.title}}</h1>
+      <hr>
+      <h3>{{book.author}}</h3>
+      <hr>
+      <form class="form-inline" method="POST" action="../crear_resena">
+        <div class="input-group mb-2 mr-sm-2">
+          <label for="resena" class="col-sm-2 col-form-label">Texto reseña</label>
+          <textarea placeholder="Escribe tu reseña aquí" id="resena" name="resena" class="form-control mb-2" style="height: 100px;"></textarea>
+        </div>
+        <div class="input-group mb-2 mr-sm-2">
+          <label for="stars" class="col-sm-2 col-form-label">Calificación</label>
+          <div class="star-rating">
+            <span id="star-1" class="star rated">★</span>
+            <span id="star-2" class="star">★</span>
+            <span id="star-3" class="star">★</span>
+            <span id="star-4" class="star">★</span>
+            <span id="star-5" class="star">★</span>
+          </div>
+          <input type="hidden" name="rating" id="rating_send" value="1">
+          <input type="hidden" name="book_id" value="{{book.id}}">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mb-4">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stars = document.querySelectorAll('.star');
+  const rating = document.querySelector('.star-rating');
+  const ratingSend = document.getElementById('rating_send');
+  let rat = 1;
+  let index;
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].addEventListener('mouseover', function() {
+      for (let j = 0; j < stars.length; j++) {
+        stars[j].classList.remove('rated');
+      }
+      for (let j = 0; j <= i; j++) {
+        stars[j].classList.add('rated');
+      }
+    });
+    stars[i].addEventListener('click', function() {
+      index = i;
+      rat = i + 1;
+      applyRating();
+    });
+    stars[i].addEventListener('mouseout', function() {
+      for (let j = 0; j < stars.length; j++) {
+        stars[j].classList.remove('rated');
+      }
+      applyRating();
+    });
+
+    function applyRating() {
+      for (let j = 0; j < stars.length; j++) {
+        stars[j].classList.remove('rated');
+      }
+      for (let j = 0; j < rat; j++) {
+        stars[j].classList.add('rated');
+      }
+      ratingSend.value = rat;
+    }
+  }
+</script>
+{% endblock %}

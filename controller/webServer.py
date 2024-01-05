@@ -216,8 +216,9 @@ def resenas(cod):
     page = int(request.values.get("page", 1))
     first = (page - 1) * 6
     total_pages = (len(resenas) // 6) + 1
+    book = library.get_book(cod)
     resp = render_template("resenas.html", resenas=resenas[first:first + 6], current_page=page,
-                           total_pages=total_pages, max=max, min=min)
+                           total_pages=total_pages, max=max, min=min, book=book)
     return resp
 
 @app.route('/libro/<cod>')
@@ -226,9 +227,40 @@ def libro(cod):
         libro = library.get_book(cod)
     except IndexError:
         return "No existe el libro"
+    logged = 'user' in dir(request) and request.user and request.user.token
     copias = libro.get_copies()
     disponibles = len([copia for copia in copias if copia.disponible()])
-    resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles)
+    resp = render_template("book.html", book=libro, copias=len(copias), disponibles=disponibles, logged=logged)
+    return resp
+
+@app.route('/resena/<cod>')
+def resena(cod):
+    try:
+        libro = library.get_book(cod)
+    except IndexError:
+        return render_template("error.html", error="No existe el libro")
+    logged = 'user' in dir(request) and request.user and request.user.token
+    if not logged:
+        return redirect("/login")
+    resp = render_template("resena_form.html", book=libro)
+    return resp
+
+@app.route('/crear_resena', methods=['POST'])
+def crear_resena():
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    cod = request.form.get("book_id")
+    book = library.get_book(cod)
+    user = request.user
+    texto = request.form.get("resena")
+    try:
+        rating = int(request.form.get("rating"))
+        book.add_resena(user, texto, rating)
+    except ValueError as e:
+        return render_template("error.html", error=str(e))
+
+    resp = redirect(f"/libro/{cod}")
     return resp
 
 @app.route('/crear_reserva', methods=['POST'])
@@ -243,7 +275,7 @@ def crear_reserva():
         gestor_reservas.crear_reserva(book, request.user, date)
         resp = redirect("/misLibros")
     except ReservaImposible as e:
-        return str(e)
+        return render_template("error.html", error=str(e))
     return resp
 
 @app.route('/reservar/<cod>')
@@ -259,12 +291,14 @@ def reservar(cod):
 
 @app.route('/misLibros')
 def misLibros():
-    books, nb_books = library.search_my_books(request.user)
+    # books, nb_books = library.search_my_books(request.user)
     titulo = request.values.get("title", "")
     autor = request.values.get("author", "")
+    reservas = gestor_reservas.get_reservas_usuario(request.user, titulo, autor)
     page = int(request.values.get("page", 1))
-    total_pages = (nb_books // 6) + 1
-    return render_template('misLibros.html', books=books, titulo=titulo, autor=autor, current_page=page,
+    first = (page - 1) * 6
+    total_pages = (len(reservas) // 6) + 1
+    return render_template('misLibros.html', books=reservas[first:first+6], titulo=titulo, autor=autor, current_page=page,
                            total_pages=total_pages, max=max, min=min)
 
 
@@ -351,7 +385,7 @@ def perfil_solicitud(username):
 
 @app.route('/devolverLibro/<cod>')
 def devolver_libro(cod):
-    library.devolver_libro(cod)
+    gestor_reservas.devolver_libro(cod)
     return redirect('/misLibros')
 
 
