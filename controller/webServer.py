@@ -291,9 +291,9 @@ def reservar(cod):
 
 @app.route('/misLibros')
 def misLibros():
-    books, nb_books = library.search_my_books(request.user)
     titulo = request.values.get("title", "")
     autor = request.values.get("author", "")
+    books, nb_books = library.search_my_books(request.user, titulo, autor)
     page = int(request.values.get("page", 1))
     total_pages = (nb_books // 6) + 1
     return render_template('misLibros.html', books=books, titulo=titulo, autor=autor, current_page=page,
