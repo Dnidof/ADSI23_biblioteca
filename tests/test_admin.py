@@ -13,7 +13,7 @@ class TestAdmin(BaseTestClass):
         self.assertEqual('Gestionar usuarios', page.find('header').find('ul').find_all('li')[4].get_text())
         self.assertEqual('Añadir libro', page.find('header').find('ul').find_all('li')[5].get_text())
 
-        res2 = self.client.get('/')
+        res2 = self.client.get('/gestionarusuarios')
         page = BeautifulSoup(res2.data, features="html.parser")
         for link in page.find("div", {"class": "p-5"}).find_all("a"):
             print(link.get_text())
@@ -27,6 +27,12 @@ class TestAdmin(BaseTestClass):
         self.assertIn('time', ''.join(res.headers.values()))
         res2 = self.client.get('/')
         page = BeautifulSoup(res2.data, features="html.parser")
-        for link in page.find("div", {"class": "p-5"}).find_all("a"):
-            print(link.get_text())
-            self.assertTrue(link.get_text() not in ["Añadir usuario", "Eliminar usuario"])
+
+        # Comprobamos que no le salen las opciones en el navbar
+        for link in page.find('header').find('ul').find_all('li'):
+            self.assertTrue(link.get_text() not in ["Gestionar usuarios", "Añadir libro"])
+
+        # Comprobamos que al intentar entrar al html de gestionar usuarios le redirige
+        res2 = self.client.get('/gestionarusuarios')
+        self.assertEqual(302, res2.status_code)
+        self.assertEqual('/', res2.location)
