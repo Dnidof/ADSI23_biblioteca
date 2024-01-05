@@ -36,7 +36,7 @@ class GestorLibros:
 	def addBook(self, titulo, autor, foto, desc):
 		db.insert("INSERT INTO Book VALUES(NULL, ?, ?, ?, ?)", (titulo, autor, foto, desc))
 
-	def search_my_books(self, user, titulo="", autor="", limit=6, page=0):
+	def search_my_books(self, user, titulo, autor, limit=6, page=0):
 		res = db.select("""
 				SELECT CopiaLibro.codCopia, b.*
 				FROM Reserva
