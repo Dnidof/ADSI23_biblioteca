@@ -275,7 +275,7 @@ def crear_reserva():
         gestor_reservas.crear_reserva(book, request.user, date)
         resp = redirect("/misLibros")
     except ReservaImposible as e:
-        return render_template("error.html", error=str(e))
+        return render_template("error.html", error=str(e)), 400
     return resp
 
 @app.route('/reservar/<cod>')

@@ -46,7 +46,7 @@ class GestorReservas:
 		except ValueError:
 			raise ReservaImposible("La fecha no tiene el formato correcto")
 		if d < datetime.now():
-			raise ReservaImposible("No se puede reservar para una fecha anterior a la actual")
+			raise ReservaImposible("No se puede reservar para una fecha anterior o igual a la actual")
 		if d > datetime.now() + timedelta(days=60):
 			raise ReservaImposible("No se puede reservar para una fecha posterior a 15 días")
 		if usuario.deshabilitado:
