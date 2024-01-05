@@ -1,15 +1,18 @@
 import sqlite3
 from model.User import User
 from model.Book import Book
-from model.Reserva import Reserva
 from model import Connection
+from model.Reserva import Reserva
 from datetime import datetime, timedelta
+
 
 class ReservaImposible(Exception):
 	def __init__(self, msg):
 		self.msg = msg
 
+
 db = Connection()
+
 
 class GestorReservas:
 	__instance = None
@@ -19,7 +22,7 @@ class GestorReservas:
 			cls.__instance = super(GestorReservas, cls).__new__(cls)
 			cls.__instance.__initialized = False
 		return cls.__instance
-	
+
 	def _obtener_reservas_activas_usuario(self, usuario: User) -> int:
 		username = usuario.username
 		res = db.select("""
@@ -60,6 +63,23 @@ class GestorReservas:
 			except sqlite3.IntegrityError:
 				continue
 		raise ReservaImposible("No se ha podido reservar. Probablemente ya hayas reservado y devuelto hoy la unica copia disponible de este libro. Prueba mañana.")
+
+	# def devolver_libro(self, cod):
+	# 	db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
+
+	def añadir_reseña(self, texto, puntuacion, usuario, cod_copia):
+		try:
+			query = "SELECT codLibro FROM CopiaLibro WHERE codCopia = ?"
+			result = db.select(query, (cod_copia,))
+
+			if result:
+				cod_libro = result[0][0]
+				# Insertar la reseña asociada al código del libro obtenido
+				db.insert("INSERT INTO Resenia VALUES (?, ?, ?, ?)", (cod_libro, usuario, texto, puntuacion))
+			else:
+				print("La copia especificada no existe.")
+		except Exception as e:
+			print(f"Error al añadir reseña, el usuario ya ha creado una review de este libro: {e}")
 
 	def devolver_libro(self, cod):
 		db.update("UPDATE Reserva SET Fechadev = DATE('now') WHERE codCopia = ? AND fechaDev > DATE('now')", (cod,))
