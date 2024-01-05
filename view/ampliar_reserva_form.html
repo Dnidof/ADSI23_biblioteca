@@ -14,14 +14,14 @@
             <hr>
             <h3>{{book.author}}</h3>
             <hr>
-            <form class="form-inline" method="post" action="/crear_reserva">
+            <form class="form-inline" method="post" action="/ampliar_reserva">
                 <div class="input-group mb-2 mr-sm-2">
                     <label class="col-sm-2 col-form-label" for="email">Hasta cuando quieres reservar el libro?</label>
                     <input type="date" id="date" name="date" class="form-control mb-2" />
                 </div>
                 <p>Recuerda que el periodo maximo de reserva son 2 meses (60 dias)</p>
-                <input hidden type="text" id="book_id" name="book_id" value="{{book.id}}" />
-                <button type="submit" class="btn btn-primary btn-block mb-4">Reservar</button>
+                <input hidden type="text" id="codCopia" name="codCopia" value="{{cod_copia}}" />
+                <button type="submit" class="btn btn-primary btn-block mb-4">Ampliar</button>
             </form>
         </div>
 </div>

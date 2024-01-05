@@ -278,6 +278,20 @@ def crear_reserva():
         return render_template("error.html", error=str(e)), 400
     return resp
 
+@app.route('/eliminar', methods=['GET'])
+def eliminar_reserva():
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    copia = request.values.get("l", "")
+    date = request.values.get("date", "")
+    try:
+        gestor_reservas.cancelar_reserva(copia, request.user.username, date)
+    except ValueError as e:
+        return render_template("error.html", error=str(e)), 400    
+    resp = redirect("/misLibros")
+    return resp
+
 @app.route('/reservar/<cod>')
 def reservar(cod):
     if 'user' not in dir(request) or not request.user or not request.user.token:
@@ -286,6 +300,29 @@ def reservar(cod):
     libro = library.get_book(cod)
     copias = libro.get_copies()
     resp = render_template("reservar_form.html", book=libro, copias=copias)
+    return resp
+
+@app.route('/ampliar/<cod>')
+def ampliar(cod):
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    libro = library.obtener_libro_desde_copia(cod)
+    resp = render_template("ampliar_reserva_form.html", book=libro, cod_copia=cod)
+    return resp
+
+@app.route('/ampliar_reserva', methods=['POST'])
+def ampliar_reserva():
+    if 'user' not in dir(request) or not request.user or not request.user.token:
+        resp = redirect("/login")
+        return resp
+    cod = request.form.get("codCopia")
+    date = request.form.get("date")
+    try:
+        gestor_reservas.ampliar_reserva(cod, request.user.username, date)
+        resp = redirect("/misLibros")
+    except ReservaImposible as e:
+        return render_template("error.html", error=str(e)), 400
     return resp
 
 

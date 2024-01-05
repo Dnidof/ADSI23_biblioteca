@@ -40,6 +40,8 @@
                         {% if reserva.is_active(): %}
                         <div class="" style="display: flex; flex-direction: column;">
                             <a href="devolverLibro/{{reserva.codCopia}}"><button class="btn btn-primary" style="margin-right: 25px;">Devolver</button></a>
+                            <hr/>
+                            <a href="ampliar/{{reserva.codCopia}}"><button class="btn btn-primary" style="margin-right: 25px;">Ampliar reserva</button></a>
                             <p>Has de devolver este libro el:<br>{{reserva.fechaDev.date()}}</p>
                         </div>
                         {% else: %}
@@ -49,6 +51,8 @@
                         {% if reserva.resenable(): %}
                         <a href="/resena/{{reserva.book.id}}"><button class="btn btn-primary">Reseñar</button></a>
                         {% endif %}
+                        <hr>
+                        <a href="/eliminar?l={{reserva.codCopia}}&date={{reserva.fechaInicio.date()}}" class="card-link"><button class="btn btn-danger">Eliminar</button></a>
                     </div>
                 </div>
             </div>

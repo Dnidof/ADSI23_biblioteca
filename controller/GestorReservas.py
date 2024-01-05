@@ -62,10 +62,8 @@ class GestorReservas:
 				return
 			except sqlite3.IntegrityError:
 				continue
-		raise ReservaImposible("No se ha podido reservar. Probablemente ya hayas reservado y devuelto hoy la unica copia disponible de este libro. Prueba mañana.")
-
-	# def devolver_libro(self, cod):
-	# 	db.delete("DELETE FROM Reserva WHERE codCopia = ?", (cod,))
+		raise ReservaImposible("""No se ha podido reservar. Probablemente ya hayas reservado y devuelto
+						  hoy la unica copia disponible de este libro. Prueba mañana.""")
 
 	def añadir_reseña(self, texto, puntuacion, usuario, cod_copia):
 		try:
@@ -99,3 +97,28 @@ class GestorReservas:
 		reservas = [Reserva(r[0], r[1], r[2], Book(*r[3:]), usuario) for r in res]
 		reservas.sort(key=lambda r: r.fechaDev, reverse=True)
 		return reservas
+	
+	def cancelar_reserva(self, codCopia: str, usuario: str, fechaInicio: str):
+		cantidad = db.delete("DELETE FROM Reserva WHERE codCopia = ? AND fechaInicio = ? AND usuario = ?",
+					    (codCopia, fechaInicio, usuario))
+		if cantidad == 0:
+			raise ValueError("No hay reservas que coincidan con los datos especificados")
+
+	def ampliar_reserva(self, codCopia: str, usuario: str, fechaDev: str):
+		fechaInicio = db.select("SELECT fechaInicio FROM Reserva WHERE codCopia = ? AND usuario = ?",
+					    (codCopia, usuario))[0][0]
+		fechaInicio = datetime.strptime(fechaInicio, "%Y-%m-%d")
+		try:
+			fechaDev = datetime.strptime(fechaDev, "%Y-%m-%d")
+		except ValueError:
+			raise ReservaImposible("La fecha no tiene el formato correcto")
+		if fechaDev < fechaInicio:
+			raise ReservaImposible("La fecha de devolución no puede ser anterior a la fecha de inicio")
+		if fechaDev > fechaInicio + timedelta(days=60):
+			raise ReservaImposible("La fecha de devolución no puede ser posterior a 60 días")
+		if fechaDev < datetime.now():
+			raise ReservaImposible("La fecha de devolución no puede ser anterior a la fecha actual")
+		cantidad = db.update("UPDATE Reserva SET fechaDev = ? WHERE codCopia = ? AND fechaDev > DATE('now') AND usuario = ?",
+					    (fechaDev.date(), codCopia, usuario))
+		if cantidad == 0:
+			raise ReservaImposible("No hay reservas que coincidan con los datos especificados")

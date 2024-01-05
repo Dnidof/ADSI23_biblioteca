@@ -10,14 +10,14 @@ class TestReservas(BaseTestClass):
 		self.db.delete("DELETE FROM Reserva WHERE usuario = 'NgbZCib'")
 
 	def tearDown(self):
-		# self.db.delete("DELETE FROM Reserva WHERE usuario = 'NgbZCib'")
+		self.db.delete("DELETE FROM Reserva WHERE usuario = 'NgbZCib'")
 		pass
 
 
-	def crear_reserva(self, libro_a_reservar: int, date: datetime):
+	def crear_reserva(self, libro_a_reservar: int, date: datetime, primera_copia = False):
 		self.db.insert("""
 				INSERT INTO Reserva (codCopia, usuario, fechaInicio, fechaDev)
-				VALUES (?, ?, DATE('now'), ?)""", (libro_a_reservar*2, 'NgbZCib', date.strftime('%Y-%m-%d')))
+				VALUES (?, ?, DATE('now'), ?)""", (libro_a_reservar*2 - int(primera_copia), 'NgbZCib', date.strftime('%Y-%m-%d')))
 
 	def test_reserva_legal(self):
 		self.login('ejemplo@gmail.com', '123456')
@@ -92,10 +92,27 @@ class TestReservas(BaseTestClass):
 		self.assertEqual(1, len(reserva))
 
 	def test_ampliar(self):
-		raise SkipTest("Not implemented")
+		self.login('ejemplo@gmail.com', '123456')
+		self.crear_reserva(1, datetime.now() + timedelta(days=2), True)
+		self.crear_reserva(1, datetime.now() + timedelta(days=3))
+		reservas1 = self.db.select("SELECT * FROM Reserva WHERE usuario = 'NgbZCib'")
+		self.assertEqual(2, len(reservas1))
+
+		headers = {'content-type': 'application/x-www-form-urlencoded'}
+		data = f"date={(datetime.now() + timedelta(days=4)).strftime('%Y-%m-%d')}&codCopia=1"
+		self.client.post('/ampliar_reserva', data = data, headers = headers)
+		fecha_fin = self.db.select("SELECT fechaDev FROM Reserva WHERE usuario = 'NgbZCib' AND codCopia = 1")[0][0]
+		self.assertEqual((datetime.now() + timedelta(days=4)).strftime('%Y-%m-%d'), fecha_fin)
 	
 	def test_cancelar(self):
-		raise SkipTest("Not implemented")
+		self.login('ejemplo@gmail.com', '123456')
+		self.crear_reserva(1, datetime.now() + timedelta(days=2))
+		res = self.client.get('/eliminar', query_string={'l': 2, "date": (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')})
+		self.assertEqual(400, res.status_code)
+		res = self.client.get('/eliminar', query_string={'l': 2, "date": (datetime.now()).strftime('%Y-%m-%d')})
+		self.assertEqual(302, res.status_code)
+		res_db = self.db.select("SELECT * FROM Reserva WHERE usuario = 'NgbZCib'")
+		self.assertEqual(0, len(res_db))
 	
 	def test_reservas_exclusivas(self):
 		self.login('ejemplo@gmail.com', '123456')
