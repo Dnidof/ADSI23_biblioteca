@@ -48,14 +48,14 @@ class GestorReservas:
 		if d < datetime.now():
 			raise ReservaImposible("No se puede reservar para una fecha anterior o igual a la actual")
 		if d > datetime.now() + timedelta(days=60):
-			raise ReservaImposible("No se puede reservar para una fecha posterior a 15 días")
+			raise ReservaImposible("No se puede reservar para una fecha posterior a 60 días")
 		if usuario.deshabilitado:
 			raise ReservaImposible("El usuario está deshabilitado")
 		for copia in disponibles:
 			try:
 				db.insert("""
 						INSERT INTO Reserva (codCopia, usuario, fechaInicio, fechaDev)
-						VALUES (?, ?, DATE('now'), ?)""", (disponibles[0].codCopia, usuario.username, date))
+						VALUES (?, ?, DATE('now'), ?)""", (copia.codCopia, usuario.username, date))
 				return
 			except sqlite3.IntegrityError:
 				continue
