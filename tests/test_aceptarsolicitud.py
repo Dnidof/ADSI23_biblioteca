@@ -12,7 +12,7 @@ class TestGestorUsuarios(BaseTestClass):
         self.db.insert("INSERT INTO Solicitud (usuarioReceptor, usuarioEnvia) VALUES (?, ?)",
                   (receptor_username, solicitante_username))
 
-        # Realizar la acción que se está probando
+        #Realizar la acción que se está probando
         res = self.client.post('/aceptar_solicitud', data={'solicitante': solicitante_username})
 
         # Verificar que la solicitud se haya eliminado

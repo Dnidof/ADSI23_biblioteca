@@ -12,7 +12,7 @@ class TestGestorUsuarios(BaseTestClass):
         self.db.insert("INSERT INTO Amigo (usuarioA, usuarioB) VALUES (?, ?)",
                   (receptor_username, solicitante_username))
 
-        # Realizar la acción que se está probando
+        #Realizar la acción que se está probando
         res = self.client.post('/eliminar_amigo',data={'amigo_username': solicitante_username})
 
         # Verificar que la relacion de amistad se haya eliminado

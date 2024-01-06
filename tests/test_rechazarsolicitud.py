@@ -15,7 +15,7 @@ class TestGestorUsuarios(BaseTestClass):
         # Realizar la acción que se está probando
         res = self.client.post('/rechazar_solicitud', data={'solicitante': solicitante_username})
 
-        # Verificar que la solicitud se haya eliminado
+        #Verificar que la solicitud se haya eliminado
         existing_request = self.db.select("SELECT * FROM Solicitud WHERE usuarioReceptor = ? AND usuarioEnvia = ?",
                                      (receptor_username, solicitante_username))
         self.assertEqual(0, len(existing_request))
