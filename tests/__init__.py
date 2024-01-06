@@ -16,3 +16,8 @@ class BaseTestClass(unittest.TestCase):
 			email=email,
 			password=password
 		))
+	def editar_perfil(self, nombre, dni):
+		return self.client.post('/editarPerfil', data=dict(
+			nombre=nombre,
+			dni=dni
+		))
