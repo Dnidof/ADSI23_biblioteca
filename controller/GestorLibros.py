@@ -36,7 +36,7 @@ class GestorLibros:
 	def addBook(self, titulo, autor, foto, desc):
 		db.insert("INSERT INTO Book VALUES(NULL, ?, ?, ?, ?)", (titulo, autor, foto, desc))
 
-	def search_my_books(self, user, titulo="", autor="", limit=6, page=0):
+	def search_my_books(self, user, titulo, autor, limit=6, page=0):
 		res = db.select("""
 				SELECT CopiaLibro.codCopia, b.*
 				FROM Reserva
@@ -74,3 +74,12 @@ class GestorLibros:
 	def get_resenas(self, cod: int) -> list[Resenia.Resenia]:
 		book = self.get_book(cod)
 		return book.get_resenas()
+	
+	def obtener_libro_desde_copia(self, cod_copia: int) -> Book:
+		res = db.select("""
+				SELECT b.*
+				FROM CopiaLibro c
+				JOIN Book b ON c.codLibro = b.codLibro
+				WHERE c.codCopia = ?
+		""", (cod_copia,))
+		return Book(*res[0])

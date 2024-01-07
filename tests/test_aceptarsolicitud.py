@@ -12,7 +12,7 @@ class TestGestorUsuarios(BaseTestClass):
         self.db.insert("INSERT INTO Solicitud (usuarioReceptor, usuarioEnvia) VALUES (?, ?)",
                   (receptor_username, solicitante_username))
 
-        # Realizar la acción que se está probando
+        #Realizar la acción que se está probando
         res = self.client.post('/aceptar_solicitud', data={'solicitante': solicitante_username})
 
         # Verificar que la solicitud se haya eliminado
@@ -29,3 +29,7 @@ class TestGestorUsuarios(BaseTestClass):
         # Verificar redirección
         self.assertEqual(res.status_code, 302)  # Código de estado de redirección
         self.assertEqual(res.location, '/solicitudes')  # Dirección de redirección esperada
+
+        #Borramos la amistad de la bd para limpiar
+        self.db.delete("DELETE FROM Amigo WHERE usuarioA=? AND usuarioB=?",
+                  (receptor_username, solicitante_username))
