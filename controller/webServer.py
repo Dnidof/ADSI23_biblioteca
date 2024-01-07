@@ -458,7 +458,6 @@ def postCrear(cod):
     if 'user' in dir(request) and request.user and request.user.token:
         texto = request.form.get("contenido")
         tema = Tema(cod, "", "")
-        comentarios = tema.comentarios()
         tema.agregar_comentario(autor=request.user.username, contenido=texto)
         return redirect(f'/post/{cod}')
     else:
