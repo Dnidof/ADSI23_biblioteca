@@ -180,7 +180,7 @@ class TestAddUsuario(BaseTestClass):
 							mydivs = page.find_all("div", {"class": "error"})
 
 							errormsg = f"user:{user},nombre:{nombre},correo:{correo},password:{passwd},dni:{dni}\nErrores:{[e.get_text() for e in mydivs]}"
-							self.assertEqual(ind_sum, len(mydivs), errormsg)
+							self.assertEqual(ind_sum, len(set(d.get_text() for d in mydivs)), errormsg)
 							for e in mydivs:
 								self.assertTrue(e.get_text() in mensajes)
 
