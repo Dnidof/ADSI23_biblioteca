@@ -35,6 +35,24 @@
       "dni": "12345678Z",
       "rol": "0",
       "deshabilitado": "0"
+    },
+    {
+      "nombres": "usuario1",
+      "email": "usuario1@gmail.com",
+      "password": "usuario1",
+      "nomusuario": "usuario1",
+      "dni": "12345678Z",
+      "rol": "0",
+      "deshabilitado": "0"
+    },
+    {
+      "nombres": "usuario2",
+      "email": "usuario2@gmail.com",
+      "password": "usuario2",
+      "nomusuario": "usuario2",
+      "dni": "12345678Z",
+      "rol": "0",
+      "deshabilitado": "0"
     }
   ]
 }

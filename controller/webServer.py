@@ -406,7 +406,7 @@ def eliminar_amigo():
     if 'user' in dir(request) and request.user and request.user.token:
         amigo_username = request.values.get("amigo_username")  # Usar "amigo" directamente desde la URL
         gestorUsuarios.eliminar_amigo(request.user.username, amigo_username)
-        return redirect('/amigos.html')
+        return redirect('/amigos')
     else:
         path = request.values.get("path", "/")
         resp = redirect(path)
